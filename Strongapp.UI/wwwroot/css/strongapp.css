@@ -1,0 +1,33 @@
+body {
+    padding-top: 54px;
+    background-color: #F1EFEE !important;
+    padding-bottom: 0px;
+    font-family: "Arial";
+    color: #505050
+}
+
+.page-wrapper {
+    margin: 25px 0;
+    min-height: 700px;
+}
+
+@media only screen and (min-width: 768px) {
+    .blazored-modal {
+        min-width: 500px;
+    }
+}
+
+.blazored-modal-container {
+    z-index: 5000;
+}
+
+.selected-row
+{
+    background: lightblue;
+}
+
+.grey
+{
+    color: grey;
+    font-weight: normal;
+}

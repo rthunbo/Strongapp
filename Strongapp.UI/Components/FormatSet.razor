@@ -1,0 +1,29 @@
+﻿<span>@Format</span>
+
+@code {
+
+    [Parameter]
+    public StrongExerciseCategory Category { get; set; }
+
+    [Parameter]
+    public StrongExerciseSetData Set { get; set; }
+
+    public string Format
+    {
+        get
+        {
+            return Category switch
+            {
+                StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell => $"{Set.Weight} kg x {Set.Reps}",
+                StrongExerciseCategory.AssistedBodyweight when Set.Weight == 0 => $"{Set.Reps} reps",
+                StrongExerciseCategory.AssistedBodyweight when Set.Weight != 0 => $"-{Set.Weight} kg x {Set.Reps}",
+                StrongExerciseCategory.WeightedBodyweight when Set.Weight == 0 => $"{Set.Reps} reps",
+                StrongExerciseCategory.WeightedBodyweight when Set.Weight != 0 => $"+{Set.Weight} kg x {Set.Reps}",
+                StrongExerciseCategory.Duration => $"{Set.Seconds / 60}:{Set.Seconds % 60:D2}",
+                StrongExerciseCategory.RepsOnly => $"{Set.Reps} reps",
+                StrongExerciseCategory.Cardio => $"{Set.Distance} | {Set.Seconds / 60}:{Set.Seconds % 60:D2}",
+                _ => ""
+            };
+        }
+    }
+}

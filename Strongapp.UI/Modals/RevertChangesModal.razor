@@ -1,0 +1,24 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<div>
+    Are you sure you want to revert changes? All unsaved changes will be lost.
+    <br />
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+    <button @onclick="Revert" class="btn btn-danger float-end">Revert</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    void Revert()
+    {
+        BlazoredModal.CloseAsync();
+    }
+
+    void Cancel()
+    {
+        BlazoredModal.CancelAsync();
+    }
+}

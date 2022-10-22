@@ -1,0 +1,25 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<div>
+    Are you sure you want to cancel this workout? All progress will be lost.
+    <br />
+    <br />
+    <button @onclick="CancelWorkout" style="width: 100%" class="btn btn-danger btn-sm">Cancel Workout</button>
+    <button @onclick="Resume" style="width: 100%" class="btn btn-secondary btn-sm">Resume</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    void CancelWorkout()
+    {
+        BlazoredModal.CloseAsync();
+    }
+
+    void Resume()
+    {
+        BlazoredModal.CancelAsync();
+    }
+}

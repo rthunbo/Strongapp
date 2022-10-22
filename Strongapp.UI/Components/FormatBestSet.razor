@@ -1,0 +1,32 @@
+﻿<span><FormatSet Set="BestSet" Category="Exercise.Category" /></span>
+
+@code {
+
+    [Parameter]
+    public StrongExerciseData Exercise { get; set; }
+
+    public StrongExerciseSetData? BestSet
+    {
+        get
+        {
+            return Exercise.Category switch
+            {
+                StrongExerciseCategory.AssistedBodyweight => Exercise.Sets
+                    .OrderBy(x => x.Reps)
+                    .ThenByDescending(x => x.Weight)
+                    .LastOrDefault(),
+                StrongExerciseCategory.WeightedBodyweight => Exercise.Sets
+                    .OrderBy(x => x.Reps)
+                    .ThenBy(x => x.Weight)
+                    .LastOrDefault(),
+                StrongExerciseCategory.RepsOnly => Exercise.Sets.MaxBy(x => x.Reps),
+                StrongExerciseCategory.Duration => Exercise.Sets.MaxBy(x => x.Seconds),
+                StrongExerciseCategory.Barbell => Exercise.Sets.MaxBy(x => x.Weight),
+                StrongExerciseCategory.Dumbbell => Exercise.Sets.MaxBy(x => x.Weight),
+                StrongExerciseCategory.MachineOther => Exercise.Sets.MaxBy(x => x.Weight),
+                StrongExerciseCategory.Cardio => Exercise.Sets.MaxBy(x => x.Distance),
+                _ => null
+            };
+        }
+    }
+}

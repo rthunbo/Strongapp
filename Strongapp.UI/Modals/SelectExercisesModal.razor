@@ -1,0 +1,71 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+@inject IExerciseService ExerciseService
+
+<div class="simple-form extras">
+    <h5>Selected exercises:</h5>
+    <div style="height: 100px; overflow: auto;">
+        <table>
+            <tbody>
+                @foreach (var exercise in SelectedExercises)
+                {
+                    <tr>
+                        <td>@exercise.ExerciseName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <h5>Available exercises:</h5>
+    <div style="height: 300px; overflow: auto;">
+        <table>
+            <tbody>
+                @foreach (var exercise in Exercises)
+                {
+                    <tr @onclick="@(() => SelectExercise(exercise))">
+                        <td>@exercise.ExerciseName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+    <button @onclick="SubmitForm" class="btn btn-primary float-end">Okay</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public StrongFolder Folder { get; set; } = new StrongFolder();
+
+    public List<StrongExercise> Exercises { get; set; }
+
+    public List<StrongExercise> SelectedExercises { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Exercises = await ExerciseService.GetExercises();
+    }
+
+    protected void SelectExercise(StrongExercise exercise)
+    {
+        if (SelectedExercises.Contains(exercise))
+            SelectedExercises.Remove(exercise);
+        else
+            SelectedExercises.Add(exercise);
+    }
+
+    void SubmitForm()
+    {
+        BlazoredModal.CloseAsync(ModalResult.Ok(SelectedExercises));
+    }
+
+    void Cancel()
+    {
+        BlazoredModal.CancelAsync();
+    }
+}

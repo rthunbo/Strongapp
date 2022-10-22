@@ -1,0 +1,22 @@
+﻿@page "/history"
+@using Strongapp.UI.Components
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>History</h1>
+            </div>
+        </div>
+        <br />
+
+        <Virtualize ItemsProvider="LoadWorkouts" Context="workout" @ref="VirtualizeContainer">
+            <div class="row">
+                <div class="col-md-6">
+                    <WorkoutSummary Workout="workout" OnRemoveWorkout="RemoveWorkout" />
+                    <br />
+                </div>
+            </div>
+        </Virtualize>
+    </div>
+</div>

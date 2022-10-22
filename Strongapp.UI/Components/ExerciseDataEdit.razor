@@ -1,0 +1,127 @@
+﻿<RemovableSection Title="@ExerciseData.ExerciseName" OnRemove="RemoveExercise">
+    <Grid Items="ExerciseData.Sets">
+        <Header>
+            <th>Set</th>
+            <th>Previous</th>
+            @if (ExerciseData.Category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.MachineOther)
+            {
+                <th class="col-2">kg</th>
+                <th class="col-2">Reps</th>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.WeightedBodyweight)
+            {
+                <th>+kg</th>
+                <th>Reps</th>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.AssistedBodyweight)
+            {
+                <th>-kg</th>
+                <th>Reps</th>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.RepsOnly)
+            {
+                <th class="col-4">Reps</th>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.Duration)
+            {
+                <th>Time</th>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.Cardio)
+            {
+                <th>km</th>
+                <th>Time</th>
+            }
+            <th class="col-1">
+                <div class="text-center">
+                    @if (IsTemplate)
+                    {
+                        <i class="fas fa-lock"></i>
+                    }
+                    @if (!IsTemplate)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </div>
+            </th>
+            <th class="col-1"></th>
+        </Header>
+        <Row Context="set">
+            <td>@set.SetOrder</td>
+            <td>
+                @if (set.SetOrder <= Previous.Sets.Count)
+                {
+                    <FormatSet Set="Previous.Sets[set.SetOrder-1]" Category="ExerciseData.Category" />
+                }
+            </td>
+            @if (ExerciseData.Category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.MachineOther or StrongExerciseCategory.WeightedBodyweight or StrongExerciseCategory.AssistedBodyweight)
+            {
+                <td>
+                    <CustomInputNumber placeholder="@set.InitialWeight" style="width: 100%" Value="@set.Weight" TValue="decimal?" ValueChanged="(value) => WeightChanged(set, value)" ValueExpression="() => set.Weight" />
+                </td>
+                <td>
+                    <CustomInputNumber placeholder="@set.InitialReps" style="width: 100%" Value="@set.Reps" TValue="int?" ValueChanged="(value) => RepsChanged(set, value)" ValueExpression="() => set.Reps" />
+                </td>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.RepsOnly)
+            {
+                <td>
+                    <CustomInputNumber placeholder="@set.InitialReps" style="width: 100%" Value="@set.Reps" TValue="int?" ValueChanged="(value) => RepsChanged(set, value)" ValueExpression="() => set.Reps" />
+                </td>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.Duration)
+            {
+                <td>
+                    <CustomInputNumber placeholder="@set.InitialSeconds" style="width: 100%" Value="@set.Seconds" TValue="int?" ValueChanged="(value) => SecondsChanged(set, value)" ValueExpression="() => set.Seconds" />
+                </td>
+            }
+            @if (ExerciseData.Category is StrongExerciseCategory.Cardio)
+            {
+                <td>
+                    <CustomInputNumber placeholder="@set.InitialDistance" style="width: 100%" Value="@set.Distance" TValue="int?" ValueChanged="(value) => DistanceChanged(set, value)" ValueExpression="() => set.Distance" />
+                </td>
+                <td>
+                    <CustomInputNumber placeholder="@set.InitialSeconds" style="width: 100%" Value="@set.Seconds" TValue="int?" ValueChanged="(value) => SecondsChanged(set, value)" ValueExpression="() => set.Seconds" />
+                </td>
+            }
+            <td>
+                @if (IsTemplate)
+                {
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                }
+                @if (!IsTemplate)
+                {
+                    @if (!set.IsComplete)
+                    {
+                        <div class="text-center">
+                            <button type="button" class="btn btn-secondary btn-sm" @onclick="() => MarkComplete(set)" disabled="@IsMarkCompleteDisabled(set)">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    }
+                    @if (set.IsComplete)
+                    {
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary btn-sm" @onclick="() => MarkIncomplete(set)">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    }
+                }
+            </td>
+            <td>
+                <div class="text-center">
+                    <button type="button" @onclick="() => RemoveSet(set)" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </Row>
+    </Grid>
+    <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm" style="width: 100%" @onclick="AddSet">+ Add set</button>
+    </div>
+</RemovableSection>

@@ -1,0 +1,29 @@
+﻿@page "/templates/edit"
+@page "/templates/edit/{TemplateId}"
+@using Strongapp.UI.Components
+
+<div class="page-wrapper">
+    <div class="container">
+        <EditForm Model="@Template" OnValidSubmit="@HandleValidSubmit">
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary float-end" disabled="@(!IsModified)">Save</button>
+                    <button type="button" class="btn btn-secondary float-start" @onclick="CancelTemplate">Cancel</button>
+                    <h4 class="text-center">@(TemplateId == null ? "New" : "Edit") Template</h4>
+                    <hr />
+                    <CustomInputText Value="@Template.TemplateName" TValue="string?" ValueChanged="(value) => NameChanged(value)" ValueExpression="() => Template.TemplateName" class="form-control" placeholder="Template name" />
+                    <br />
+                    @foreach (var exerciseData in Template.ExerciseData)
+                    {
+                        <ExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" OnModified="SetModified" IsTemplate="true" />
+                    }
+                    <button type="button" class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 20px;" @onclick="AddExercises">Add Exercises</button>
+                    @if (TemplateId != null)
+                    {
+                        <button type="button" class="btn btn-danger btn-sm" style="width: 100%" @onclick="DeleteTemplate">Delete Template</button>
+                    }
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>

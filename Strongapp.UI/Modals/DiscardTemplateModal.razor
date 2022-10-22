@@ -1,0 +1,24 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<div>
+    Are you sure you want to discard this template? All progress will be lost.
+    <br />
+    <button @onclick="DoNothing" class="btn btn-secondary">Do Nothing</button>
+    <button @onclick="Discard" class="btn btn-danger float-end">Discard</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    void Discard()
+    {
+        BlazoredModal.CloseAsync();
+    }
+
+    void DoNothing()
+    {
+        BlazoredModal.CancelAsync();
+    }
+}

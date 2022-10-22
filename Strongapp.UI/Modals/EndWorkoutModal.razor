@@ -1,0 +1,33 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<div>
+    @if (HasEmptySets)
+    {
+        <span>All invalid or empty sets will be remove. All valid sets will be marked as complete.</span>
+    }
+    <br />
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+    <button @onclick="SubmitForm" class="btn btn-primary float-end">@SubmitName</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public bool HasEmptySets { get; set; }
+
+    [Parameter]
+    public string SubmitName { get; set; }
+
+    void SubmitForm()
+    {
+        BlazoredModal.CloseAsync();
+    }
+
+    void Cancel()
+    {
+        BlazoredModal.CancelAsync();
+    }
+}

@@ -1,0 +1,22 @@
+﻿<Card Title="@Workout.WorkoutName" SubTitle="@Workout.Date.ToLongDateString()" 
+      EditUrl="@($"/workouts/edit/{Workout.Id}")" OnRemove="RemoveWorkout">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Exercise</th>
+                <th>Best Set</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exercise in Workout.ExerciseData)
+            {
+                <tr>
+                    <td>@exercise.Sets.Count x @exercise.ExerciseName</td>
+                    <td>
+                        <FormatBestSet Exercise="exercise" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</Card>

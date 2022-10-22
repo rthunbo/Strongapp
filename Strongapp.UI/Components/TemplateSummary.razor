@@ -1,0 +1,30 @@
+﻿<div class="card">
+    <div class="card-body">
+        @if (!Template.IsExampleTemplate)
+        {
+            <div class="float-end">
+                <a href="@($"/templates/edit/{Template.Id}")" class="btn btn-primary btn-sm">
+                <i class="fas fa-edit"></i>
+            </a>
+            <button @onclick="CopyTemplate" class="btn btn-primary btn-sm">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button @onclick="RemoveTemplate" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        }
+        <h5 class="card-title">@Template.TemplateName</h5>
+        <table class="">
+            <tbody>
+                @foreach (var exercise in Template.ExerciseData)
+                {
+                    <tr>
+                        <td>@exercise.Sets.Count x @exercise.ExerciseName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a href="@($"/workouts/edit?Template={Template.Id}")" class="btn btn-primary btn-sm" style="width: 100%">Start Workout</a>
+    </div>
+</div>
