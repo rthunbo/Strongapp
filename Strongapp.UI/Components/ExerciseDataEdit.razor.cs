@@ -2,6 +2,7 @@
 using Strongapp.Models;
 using Strongapp.UI.Services;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Strongapp.UI.Components
 {
@@ -22,7 +23,9 @@ namespace Strongapp.UI.Components
         [Inject]
         public IExerciseService ExerciseService { get; set; }
 
-        public StrongExerciseData Previous { get; set; } = new StrongExerciseData();
+        public StrongExerciseData? Previous { get; set; }
+
+        public bool IsLoading { get; set; }
 
         public bool IsMarkCompleteDisabled(StrongExerciseSetData Set)
         {
@@ -49,9 +52,9 @@ namespace Strongapp.UI.Components
 
         protected override async Task OnInitializedAsync()
         {
-            var exerciseHistory = await ExerciseService.GetExerciseHistory(ExerciseData.ExerciseName);
-            if (exerciseHistory.Any())
-                Previous = exerciseHistory.Last();
+            IsLoading = true;
+            Previous = await ExerciseService.GetPrevious(ExerciseData.ExerciseName);
+            IsLoading = false;
         }
 
         protected async Task RemoveExercise()

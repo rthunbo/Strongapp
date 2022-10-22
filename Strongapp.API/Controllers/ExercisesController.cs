@@ -29,6 +29,16 @@ namespace Strongapp.API.Controllers
             return exercisesHistory;
         }
 
+        [HttpGet("previous")]
+        public async Task<StrongExerciseData?> GetPrevious([FromQuery] string name)
+        {
+            var workouts = await _workoutRepository.GetAsync();
+            var exercisesHistory = workouts
+                .SelectMany(x => x.ExerciseData)
+                .LastOrDefault(x => x.ExerciseName == name);
+            return exercisesHistory;
+        }
+
         [HttpGet]
         public async Task<StrongExercise> Get([FromQuery] string name)
         {

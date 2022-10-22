@@ -8,6 +8,8 @@ namespace Strongapp.UI.Services
         
         Task<List<StrongExerciseData>> GetExerciseHistory(string name);
 
+        Task<StrongExerciseData?> GetPrevious(string name);
+
         Task<List<StrongExercise>> GetExercises();
     }
 }
