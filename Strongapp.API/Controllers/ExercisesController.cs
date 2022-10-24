@@ -52,15 +52,25 @@ namespace Strongapp.API.Controllers
                 .Select(g => g.Last())
                 .OrderBy(x => x.ExerciseName);
 
+            var histories = workouts
+                .SelectMany(x => x.ExerciseData)
+                .GroupBy(x => x.ExerciseName)
+                .Select(g => new { ExerciseName = g.Key, List = g.ToList() });
+
             var exercises = await _exerciseRepository.GetAsync();
-            return exercises.Select(x => new StrongExerciseWithMetadata
-            {
-                Id = x.Id,
-                BodyPart = x.BodyPart,
-                Category = x.Category,
-                ExerciseName = x.ExerciseName,
-                PreviousPerformance = previousPerformances.FirstOrDefault(pp => pp.ExerciseName == x.ExerciseName),
-           }).ToList();
+            return exercises.Select(x => {
+                var previousPerformance = previousPerformances.FirstOrDefault(pp => pp.ExerciseName == x.ExerciseName);
+                var history = histories.FirstOrDefault(h => h.ExerciseName == x.ExerciseName).List;
+                return new StrongExerciseWithMetadata
+                {
+                    Id = x.Id,
+                    BodyPart = x.BodyPart,
+                    Category = x.Category,
+                    ExerciseName = x.ExerciseName,
+                    PreviousPerformance = previousPerformance,
+                    BestSet = Helpers.GetBestSet(x.Category, history.Select(x => Helpers.GetBestSet(x.Category, x.Sets)))
+                };
+            });
         }
     }
 }
