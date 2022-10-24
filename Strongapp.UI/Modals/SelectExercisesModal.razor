@@ -1,6 +1,11 @@
 ﻿@using Blazored.Modal
 @using Blazored.Modal.Services
+@using Fluxor
+@using Strongapp.UI.Stores
 @inject IExerciseService ExerciseService
+@inject IDispatcher Dispatcher
+@inject IState<AppStore> State
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <div class="simple-form extras">
     <h5>Selected exercises:</h5>
@@ -39,19 +44,11 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
 
-    [Parameter]
-    public StrongFolder Folder { get; set; } = new StrongFolder();
+    public List<StrongExerciseWithMetadata> Exercises => State.Value.Exercises;
 
-    public List<StrongExercise> Exercises { get; set; }
+    public List<StrongExerciseWithMetadata> SelectedExercises { get; set; } = new();
 
-    public List<StrongExercise> SelectedExercises { get; set; } = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        Exercises = await ExerciseService.GetExercises();
-    }
-
-    protected void SelectExercise(StrongExercise exercise)
+    protected void SelectExercise(StrongExerciseWithMetadata exercise)
     {
         if (SelectedExercises.Contains(exercise))
             SelectedExercises.Remove(exercise);

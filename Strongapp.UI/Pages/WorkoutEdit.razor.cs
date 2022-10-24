@@ -1,9 +1,12 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Strongapp.Models;
 using Strongapp.UI.Modals;
 using Strongapp.UI.Services;
+using Strongapp.UI.Stores;
+using System.Resources;
 
 namespace Strongapp.UI.Pages
 {
@@ -16,7 +19,7 @@ namespace Strongapp.UI.Pages
         [SupplyParameterFromQuery]
         public string Template { get; set; }
 
-        public StrongWorkout Workout { get; set; } = new StrongWorkout();
+        public StrongWorkout? Workout { get; set; }
 
         [Inject]
         public IWorkoutService WorkoutService { get; set; }
@@ -33,20 +36,50 @@ namespace Strongapp.UI.Pages
         [CascadingParameter]
         public IModalService Modal { get; set; }
 
+        [Inject]
+        public IState<AppStore> State { get; set; } = default!;
+
+        [Inject]
+        public IDispatcher Dispatcher { get; set; } = default!;
+
+        public List<StrongExerciseWithMetadata> Exercises => State.Value.Exercises;
+
         protected async override Task OnInitializedAsync()
         {
-            if (WorkoutId == null)
+            Workout = CreateWorkout();
+            State.StateChanged += State_StateChanged;
+
+            await base.OnInitializedAsync();
+        }
+
+        private StrongWorkout? CreateWorkout()
+        {
+            if (State.Value.Workouts.Count > 0 && State.Value.Templates.Count > 0)
             {
-                if (Template == null)
-                    Workout = new StrongWorkout();
-                else
+                if (WorkoutId == null)
                 {
-                    var template = await TemplateService.GetTemplateById(Template);
-                    Workout = CreateWorkoutFromTemplate(template);
+                    if (Template == null)
+                        return new StrongWorkout();
+                    else
+                    {
+                        var template = State.Value.Templates.FirstOrDefault(x => x.Id == Template);
+                        return CreateWorkoutFromTemplate(template);
+                    }
                 }
+                else
+                    return State.Value.Workouts.FirstOrDefault(x => x.Id == WorkoutId);
             }
-            else
-                Workout = await WorkoutService.GetWorkoutById(WorkoutId);
+            return null;
+        }
+
+        private void State_StateChanged(object? sender, EventArgs e)
+        {
+            Workout ??= CreateWorkout();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            State.StateChanged -= State_StateChanged;
         }
 
         protected async Task HandleValidSubmit()
@@ -88,17 +121,16 @@ namespace Strongapp.UI.Pages
 
             if (!result.Cancelled)
             {
-                var selectedExercises = (List<StrongExercise>)result.Data;
+                var selectedExercises = (List<StrongExerciseWithMetadata>)result.Data;
                 foreach (var exercise in selectedExercises)
                 {
                     var sets = new List<StrongExerciseSetData>
                     {
                         new StrongExerciseSetData { SetOrder = 1 }
                     };
-                    var exerciseHistory = await ExerciseService.GetExerciseHistory(exercise.ExerciseName);
-                    if (exerciseHistory.Any())
+                    if (Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance is null)
                     {
-                        sets = exerciseHistory.Last().Sets;
+                        sets = Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance.Sets;
                     }
                     Workout.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, sets.Select(x => new StrongExerciseSetData {
                         SetOrder = x.SetOrder,

@@ -1,44 +1,49 @@
 ﻿@page "/workouts/edit"
 @page "/workouts/edit/{WorkoutId}"
 @using Strongapp.UI.Components
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@implements IDisposable
 
-<div class="page-wrapper">
-    <div class="container">
-        <EditForm Model="@Workout" OnValidSubmit="@HandleValidSubmit">
-            <div class="row">
-                <div class="col-md-6">
-                    @if (WorkoutId != null)
-                    {
-                        <input type="submit" class="btn btn-primary float-end" value="Save" />
-                    }
-                    @if (WorkoutId == null)
-                    {
-                        <input type="submit" class="btn btn-primary float-end" value="Finish" />
-                    }
-                    <h4>@(WorkoutId == null ? "New" : "Edit") Workout</h4>
-                    <hr />
-                    <div class="form-group">
-                        <label for="templateName">Name</label>
-                        <InputText @bind-Value="@Workout.WorkoutName" class="form-control" />
+@if (Workout != null)
+{
+    <div class="page-wrapper">
+        <div class="container">
+            <EditForm Model="@Workout" OnValidSubmit="@HandleValidSubmit">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (WorkoutId != null)
+                        {
+                            <input type="submit" class="btn btn-primary float-end" value="Save" />
+                        }
+                        @if (WorkoutId == null)
+                        {
+                            <input type="submit" class="btn btn-primary float-end" value="Finish" />
+                        }
+                        <h4>@(WorkoutId == null ? "New" : "Edit") Workout</h4>
+                        <hr />
+                        <div class="form-group">
+                            <label for="templateName">Name</label>
+                            <InputText @bind-Value="@Workout.WorkoutName" class="form-control" />
+                        </div>
+                        <br />
+                        @foreach (var exerciseData in Workout.ExerciseData)
+                        {
+                            <ExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" />
+                        }
+                        <button type="button" class="btn btn-primary btn-sm" style="width: 100%" @onclick="AddExercises">Add Exercises</button>
+                        @if (WorkoutId == null)
+                        {
+                            <br />
+                            <button type="button" class="btn btn-danger btn-sm" style="width: 100%" @onclick="CancelWorkout">Cancel Workout</button>
+                        }
+                        @if (WorkoutId != null)
+                        {
+                            <br />
+                            <button type="button" class="btn btn-danger btn-sm" style="width: 100%" @onclick="DeleteWorkout">Delete Workout</button>
+                        }
                     </div>
-                    <br />
-                    @foreach (var exerciseData in Workout.ExerciseData)
-                    {
-                        <ExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" />
-                    }
-                    <button type="button" class="btn btn-primary btn-sm" style="width: 100%" @onclick="AddExercises">Add Exercises</button>
-                    @if (WorkoutId == null)
-                    {
-                        <br />
-                        <button type="button" class="btn btn-danger btn-sm" style="width: 100%" @onclick="CancelWorkout">Cancel Workout</button>
-                    }
-                    @if (WorkoutId != null)
-                    {
-                        <br />
-                        <button type="button" class="btn btn-danger btn-sm" style="width: 100%" @onclick="DeleteWorkout">Delete Workout</button>
-                    }
                 </div>
-            </div>
-        </EditForm>
+            </EditForm>
+        </div>
     </div>
-</div>
+}

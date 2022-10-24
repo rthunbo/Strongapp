@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Fluxor;
+using Microsoft.AspNetCore.Components;
 using Strongapp.Models;
 using Strongapp.UI.Services;
+using Strongapp.UI.Stores;
 using System.Collections.Generic;
 using System.Data;
 
@@ -21,11 +23,9 @@ namespace Strongapp.UI.Components
         public bool IsTemplate { get; set; }
 
         [Inject]
-        public IExerciseService ExerciseService { get; set; }
+        public IState<AppStore> State { get; set; } = default!;
 
-        public StrongExerciseData? Previous { get; set; }
-
-        public bool IsLoading { get; set; }
+        public StrongExerciseData? Previous => State.Value.Exercises.FirstOrDefault(x => x.ExerciseName == ExerciseData.ExerciseName)!.PreviousPerformance;
 
         public bool IsMarkCompleteDisabled(StrongExerciseSetData Set)
         {
@@ -48,13 +48,6 @@ namespace Strongapp.UI.Components
                 return Set.Seconds == null && Set.InitialSeconds == null;
             }
             return true;
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            IsLoading = true;
-            Previous = await ExerciseService.GetPrevious(ExerciseData.ExerciseName);
-            IsLoading = false;
         }
 
         protected async Task RemoveExercise()

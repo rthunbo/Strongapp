@@ -2,10 +2,12 @@
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Strongapp.Models;
+using Strongapp.UI.Actions;
 using Strongapp.UI.Components;
 using Strongapp.UI.Modals;
 using Strongapp.UI.Services;
 using Strongapp.UI.Stores;
+using System;
 using System.Reflection;
 
 namespace Strongapp.UI.Pages
@@ -24,7 +26,7 @@ namespace Strongapp.UI.Pages
 
         public bool IsModified { get; set; }
 
-        public StrongTemplate Template { get; set; } = new StrongTemplate();
+        public StrongTemplate? Template { get; set; }
 
         [Inject]
         public ITemplateService TemplateService { get; set; }
@@ -34,20 +36,48 @@ namespace Strongapp.UI.Pages
 
         [Inject]
         private NavigationManager NavManager { get; set; }
-        
+
+        [Inject]
+        public IState<AppStore> State { get; set; } = default!;
+
+        [Inject]
+        public IDispatcher Dispatcher { get; set; } = default!;
+
+        public List<StrongExerciseWithMetadata> Exercises => State.Value.Exercises;
+
         protected async override Task OnInitializedAsync()
         {
-            if (TemplateId == null)
-            {
-                Template = new StrongTemplate()
-                {
-                    FolderName = Folder
-                };
-            }
-            else
-                Template = await TemplateService.GetTemplateById(TemplateId);
+            Template = CreateTemplate();
+            State.StateChanged += State_StateChanged;
 
             await base.OnInitializedAsync();
+        }
+
+        private StrongTemplate? CreateTemplate()
+        {
+            if (State.Value.Templates.Count > 0)
+            {
+                if (TemplateId == null)
+                {
+                    return new StrongTemplate()
+                    {
+                        FolderName = Folder
+                    };
+                }
+                else
+                    return State.Value.Templates.FirstOrDefault(x => x.Id == TemplateId);
+            }
+            return null;
+        }
+
+        private void State_StateChanged(object? sender, EventArgs e)
+        {
+           Template ??= CreateTemplate();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            State.StateChanged -= State_StateChanged;
         }
 
         public void SetModified()
@@ -82,17 +112,16 @@ namespace Strongapp.UI.Pages
 
             if (!result.Cancelled)
             {
-                var selectedExercises = (List<StrongExercise>) result.Data;
+                var selectedExercises = (List<StrongExerciseWithMetadata>) result.Data;
                 foreach (var exercise in selectedExercises)
                 {
                     var sets = new List<StrongExerciseSetData>
                     {
                         new StrongExerciseSetData { SetOrder = 1 }
                     };
-                    var exerciseHistory = await ExerciseService.GetExerciseHistory(exercise.ExerciseName);
-                    if (exerciseHistory.Any())
+                    if (Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance is  null)
                     {
-                        sets = exerciseHistory.Last().Sets;
+                        sets = Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance.Sets;
                     }
                     Template.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, sets));
                 }
@@ -107,7 +136,7 @@ namespace Strongapp.UI.Pages
             var result = await formModal.Result;
             if (!result.Cancelled)
             {
-                await TemplateService.DeleteTemplate(TemplateId);
+                Dispatcher.Dispatch(new RemoveTemplateAction(Template));
                 NavManager.NavigateTo("/");
             }
         }
