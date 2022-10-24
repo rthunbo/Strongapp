@@ -76,9 +76,10 @@ namespace Strongapp.UI.Pages
         protected async Task HandleValidSubmit()
         {
             if (TemplateId == null)
-                await TemplateService.CreateTemplate(Template);
+                Dispatcher.Dispatch(new CreateTemplateAction(Template));
             else
-                await TemplateService.UpdateTemplate(TemplateId, Template);
+                Dispatcher.Dispatch(new UpdateTemplateAction(Template));
+
             NavManager.NavigateTo("/");
         }
 
