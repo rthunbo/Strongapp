@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Strongapp.API.Repositories;
 using Strongapp.Models;
 
@@ -17,6 +18,18 @@ namespace Strongapp.API.Controllers
             _logger = logger;
             _workoutRepository = repository;
             _exerciseRepository = exerciseRepository;
+        }
+
+        [HttpGet("search")]
+        public async Task<IEnumerable<StrongExercise>> Search([FromQuery] string? searchPhrase)
+        {
+            var exercises = await _exerciseRepository.GetAsync();
+            var results = exercises;
+            if (!string.IsNullOrEmpty(searchPhrase))
+                results = results
+                    .Where(x => x.ExerciseName.Contains(searchPhrase))
+                    .ToList();
+            return results;
         }
 
         [HttpGet("history")]

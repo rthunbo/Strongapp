@@ -1,10 +1,51 @@
 ﻿@page "/exercises"
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <div class="page-wrapper">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <h1>Exercises</h1>
+                <input type="search" @bind="SearchPhrase" @bind:event="oninput" class="form-control" style="margin-bottom: 20px" />
+                <select @bind="ExerciseCategory" class="form-control float-end" style="width: 50%">
+                    <option value="" selected>Any Category</option>
+                    <option value="@StrongExerciseCategory.Barbell">Barbell</option>
+                    <option value="@StrongExerciseCategory.Dumbbell">Dumbbell</option>
+                    <option value="@StrongExerciseCategory.MachineOther">Machine / Other</option>
+                    <option value="@StrongExerciseCategory.WeightedBodyweight">Weighted Bodyweight</option>
+                    <option value="@StrongExerciseCategory.AssistedBodyweight">Assited Bodyweight</option>
+                    <option value="@StrongExerciseCategory.RepsOnly">Reps Only</option>
+                    <option value="@StrongExerciseCategory.Cardio">Cardio</option>
+                    <option value="@StrongExerciseCategory.Duration">Duration</option>
+                </select>
+                <select @bind="ExerciseBodyPart" class="form-control" style="width: 50%">
+                    <option value="" selected>Any Body Part</option>
+                    <option value="@StrongExerciseBodyPart.Core">Core</option>
+                    <option value="@StrongExerciseBodyPart.Arms">Arms</option>
+                    <option value="@StrongExerciseBodyPart.Back">Back</option>
+                    <option value="@StrongExerciseBodyPart.Chest">Chest</option>
+                    <option value="@StrongExerciseBodyPart.Legs">Legs</option>
+                    <option value="@StrongExerciseBodyPart.Shoulders">Shoulders</option>
+                    <option value="@StrongExerciseBodyPart.Other">Other</option>
+                    <option value="@StrongExerciseBodyPart.Olympic">Olympic</option>
+                    <option value="@StrongExerciseBodyPart.FullBody">Full Body</option>
+                    <option value="@StrongExerciseBodyPart.Cardio">Cardio</option>
+                </select>
+                <br />
+                <table class="table table-sm">
+                    <tbody>
+                        @foreach(var exercise in SearchResults)
+                        {
+                            <tr>
+                                <td>
+                                    <span><strong>@exercise.ExerciseName</strong></span>
+                                    <br>
+                                    <span>@exercise.BodyPart</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
