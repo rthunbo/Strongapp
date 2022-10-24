@@ -25,7 +25,7 @@ namespace Strongapp.UI.Components
         [Inject]
         public IState<AppStore> State { get; set; } = default!;
 
-        public StrongExerciseData? Previous => State.Value.Exercises.FirstOrDefault(x => x.ExerciseName == ExerciseData.ExerciseName)!.PreviousPerformance;
+        public StrongExerciseData? Previous => State.Value.Exercises.FirstOrDefault(x => x.ExerciseName == ExerciseData.ExerciseName, new StrongExerciseWithMetadata()).PreviousPerformance;
 
         public bool IsMarkCompleteDisabled(StrongExerciseSetData Set)
         {
