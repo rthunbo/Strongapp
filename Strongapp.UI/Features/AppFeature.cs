@@ -15,7 +15,6 @@ namespace Strongapp.UI.Features
                 IsFoldersLoading: false,
                 Folders: new List<StrongFolder>(),
                 Exercises: new List<StrongExerciseWithMetadata>(),
-                Workouts: new List<StrongWorkout>(),
                 IsLoading: false
                 );
     }

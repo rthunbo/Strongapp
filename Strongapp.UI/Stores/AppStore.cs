@@ -8,7 +8,6 @@ namespace Strongapp.UI.Stores
         bool IsFoldersLoading,
         List<StrongFolder> Folders,
         List<StrongExerciseWithMetadata> Exercises,
-        List<StrongWorkout> Workouts,
         bool IsLoading
         );
 }

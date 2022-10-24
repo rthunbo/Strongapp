@@ -27,10 +27,6 @@ namespace Strongapp.UI.Reducers
             => state with { Exercises = action.Exercises };
 
         [ReducerMethod]
-        public static AppStore ReduceFetchWorkoutsResultAction(AppStore state, FetchWorkoutsResultAction action)
-            => state with { Workouts = action.Workouts };
-
-        [ReducerMethod]
         public static AppStore ReduceFetchAggregateDataAction(AppStore state, FetchAggregateDataAction action)
             => state with { IsLoading = true };
 

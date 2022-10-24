@@ -13,7 +13,6 @@ namespace Strongapp.UI
         {
             Dispatcher.Dispatch(new FetchAggregateDataAction());
             Dispatcher.Dispatch(new FetchExercisesAction());
-            Dispatcher.Dispatch(new FetchWorkoutsAction());
             base.OnInitialized();
         }
     }
