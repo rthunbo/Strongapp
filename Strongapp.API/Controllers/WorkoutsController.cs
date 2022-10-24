@@ -28,6 +28,7 @@ namespace Strongapp.API.Controllers
         public async Task<StrongWorkoutList> GetPaged([FromQuery] int start, [FromQuery] int count)
         {
             var items = _repository.AsQueryable()
+                .OrderByDescending(x => x.Date)
                 .Skip(start)
                 .Take(count)
                 .ToList();
