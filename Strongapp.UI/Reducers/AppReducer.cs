@@ -21,5 +21,21 @@ namespace Strongapp.UI.Reducers
         [ReducerMethod]
         public static AppStore ReduceFetchFoldersResultAction(AppStore state, FetchFoldersResultAction action)
             => state with { IsFoldersLoading = false, Folders = action.Folders };
+
+        [ReducerMethod]
+        public static AppStore ReduceFetchExercisesResultAction(AppStore state, FetchExercisesResultAction action)
+            => state with { Exercises = action.Exercises };
+
+        [ReducerMethod]
+        public static AppStore ReduceFetchWorkoutsResultAction(AppStore state, FetchWorkoutsResultAction action)
+            => state with { Workouts = action.Workouts };
+
+        [ReducerMethod]
+        public static AppStore ReduceFetchAggregateDataAction(AppStore state, FetchAggregateDataAction action)
+            => state with { IsLoading = true };
+
+        [ReducerMethod]
+        public static AppStore ReduceFetchAggregateDataResultAction(AppStore state, FetchAggregateDataResultAction action)
+            => state with { IsLoading = false, Folders = action.Folders, Templates = action.Templates };
     }
 }

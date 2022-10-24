@@ -29,26 +29,25 @@ namespace Strongapp.API.Controllers
             return exercisesHistory;
         }
 
-        [HttpGet("previous")]
-        public async Task<StrongExerciseData?> GetPrevious([FromQuery] string name)
+        [HttpGet]
+        public async Task<IEnumerable<StrongExerciseWithMetadata>> GetExercises()
         {
             var workouts = await _workoutRepository.GetAsync();
-            var exercisesHistory = workouts
+            var previousPerformances = workouts
                 .SelectMany(x => x.ExerciseData)
-                .LastOrDefault(x => x.ExerciseName == name);
-            return exercisesHistory;
-        }
+                .GroupBy(x => x.ExerciseName)
+                .Select(g => g.Last())
+                .OrderBy(x => x.ExerciseName);
 
-        [HttpGet]
-        public async Task<StrongExercise> Get([FromQuery] string name)
-        {
-            return (await _exerciseRepository.GetAsync()).First(x => x.ExerciseName == name);
-        }
-
-        [HttpGet("all")]
-        public async Task<IEnumerable<StrongExercise>> Get()
-        {
-            return await _exerciseRepository.GetAsync();
+            var exercises = await _exerciseRepository.GetAsync();
+            return exercises.Select(x => new StrongExerciseWithMetadata
+            {
+                Id = x.Id,
+                BodyPart = x.BodyPart,
+                Category = x.Category,
+                ExerciseName = x.ExerciseName,
+                PreviousPerformance = previousPerformances.FirstOrDefault(pp => pp.ExerciseName == x.ExerciseName),
+           }).ToList();
         }
     }
 }

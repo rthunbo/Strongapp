@@ -14,26 +14,15 @@ namespace Strongapp.UI.Services
             this.http = http;
         }
 
-        public async Task<StrongExercise> GetExerciseByName(string name)
-        {
-            var exercise = await http.GetFromJsonAsync<StrongExercise>($"exercises?name={name}");
-            return exercise;
-        }
-
-        public async Task<List<StrongExerciseData>> GetExerciseHistory(string name)
+        public async Task<List<StrongExerciseData>> GetHistory(string name)
         {
             var exercises = await http.GetFromJsonAsync<List<StrongExerciseData>>($"exercises/history?name={name}");
             return exercises;
         }
 
-        public async Task<StrongExerciseData?> GetPrevious(string name)
+        public async Task<List<StrongExerciseWithMetadata>> GetExercises()
         {
-            var exercise = await http.GetFromJsonAsync<StrongExerciseData?>($"exercises/previous?name={name}");
-            return exercise;
-        }
-        public async Task<List<StrongExercise>> GetExercises()
-        {
-            var exercises = await http.GetFromJsonAsync<List<StrongExercise>>($"exercises/all");
+            var exercises = await http.GetFromJsonAsync<List<StrongExerciseWithMetadata>>($"exercises");
             return exercises;
         }
     }

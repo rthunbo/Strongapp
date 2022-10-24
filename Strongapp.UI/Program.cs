@@ -21,6 +21,8 @@ builder.Services.AddHttpClient<IFolderService, FolderService>(client =>
     client.BaseAddress = new Uri("https://localhost:7199/"));
 builder.Services.AddHttpClient<ITemplateService, TemplateService>(client =>
     client.BaseAddress = new Uri("https://localhost:7199/"));
+builder.Services.AddHttpClient<IAggregateDataService, AggregateDataService>(client =>
+    client.BaseAddress = new Uri("https://localhost:7199/"));
 
 Assembly storeAssembly = typeof(AppStore).Assembly;
 builder.Services

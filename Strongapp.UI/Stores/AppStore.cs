@@ -7,7 +7,8 @@ namespace Strongapp.UI.Stores
         List<StrongTemplate> Templates,
         bool IsFoldersLoading,
         List<StrongFolder> Folders,
-        bool IsTemplateLoading,
-        StrongTemplate CurrentTemplate
+        List<StrongExerciseWithMetadata> Exercises,
+        List<StrongWorkout> Workouts,
+        bool IsLoading
         );
 }
