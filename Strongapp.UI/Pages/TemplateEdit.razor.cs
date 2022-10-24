@@ -32,9 +32,6 @@ namespace Strongapp.UI.Pages
         public ITemplateService TemplateService { get; set; }
 
         [Inject]
-        public IExerciseService ExerciseService { get; set; }
-
-        [Inject]
         private NavigationManager NavManager { get; set; }
 
         [Inject]
@@ -47,37 +44,22 @@ namespace Strongapp.UI.Pages
 
         protected async override Task OnInitializedAsync()
         {
-            Template = CreateTemplate();
-            State.StateChanged += State_StateChanged;
+            Template = await CreateTemplate();
 
             await base.OnInitializedAsync();
         }
 
-        private StrongTemplate? CreateTemplate()
+        private async Task<StrongTemplate> CreateTemplate()
         {
-            if (State.Value.Templates.Count > 0)
+            if (TemplateId == null)
             {
-                if (TemplateId == null)
+                return new StrongTemplate()
                 {
-                    return new StrongTemplate()
-                    {
-                        FolderName = Folder
-                    };
-                }
-                else
-                    return State.Value.Templates.FirstOrDefault(x => x.Id == TemplateId);
+                    FolderName = Folder
+                };
             }
-            return null;
-        }
-
-        private void State_StateChanged(object? sender, EventArgs e)
-        {
-           Template ??= CreateTemplate();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            State.StateChanged -= State_StateChanged;
+            else
+                return await TemplateService.GetTemplateById(TemplateId);
         }
 
         public void SetModified()
@@ -115,19 +97,26 @@ namespace Strongapp.UI.Pages
                 var selectedExercises = (List<StrongExerciseWithMetadata>) result.Data;
                 foreach (var exercise in selectedExercises)
                 {
-                    var sets = new List<StrongExerciseSetData>
-                    {
-                        new StrongExerciseSetData { SetOrder = 1 }
-                    };
-                    if (Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance is  null)
-                    {
-                        sets = Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance.Sets;
-                    }
-                    Template.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, sets));
+                    Template.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, GetSets(exercise)));
                 }
 
                 IsModified = true;
             }
+        }
+
+        private List<StrongExerciseSetData> GetSets(StrongExerciseWithMetadata exercise)
+        {
+            var sets = new List<StrongExerciseSetData>
+            {
+                new StrongExerciseSetData { SetOrder = 1 }
+            };
+            var metadata = Exercises.First(x => x.ExerciseName == exercise.ExerciseName);
+            if (metadata.PreviousPerformance is not null)
+            {
+                sets = metadata.PreviousPerformance.Sets;
+            }
+
+            return sets;
         }
 
         protected async Task DeleteTemplate()

@@ -7,6 +7,7 @@ using Strongapp.UI.Modals;
 using Strongapp.UI.Services;
 using Strongapp.UI.Stores;
 using System.Resources;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Strongapp.UI.Pages
 {
@@ -30,9 +31,6 @@ namespace Strongapp.UI.Pages
         [Inject]
         private NavigationManager NavManager { get; set; }
 
-        [Inject]
-        public IExerciseService ExerciseService { get; set; }
-
         [CascadingParameter]
         public IModalService Modal { get; set; }
 
@@ -46,40 +44,25 @@ namespace Strongapp.UI.Pages
 
         protected async override Task OnInitializedAsync()
         {
-            Workout = CreateWorkout();
-            State.StateChanged += State_StateChanged;
+            Workout = await CreateWorkout();
 
             await base.OnInitializedAsync();
         }
 
-        private StrongWorkout? CreateWorkout()
+        private async Task<StrongWorkout> CreateWorkout()
         {
-            if (State.Value.Workouts.Count > 0 && State.Value.Templates.Count > 0)
+            if (WorkoutId == null)
             {
-                if (WorkoutId == null)
-                {
-                    if (Template == null)
-                        return new StrongWorkout();
-                    else
-                    {
-                        var template = State.Value.Templates.FirstOrDefault(x => x.Id == Template);
-                        return CreateWorkoutFromTemplate(template);
-                    }
-                }
+                if (Template == null)
+                    return new StrongWorkout();
                 else
-                    return State.Value.Workouts.FirstOrDefault(x => x.Id == WorkoutId);
+                {
+                    var template = await TemplateService.GetTemplateById(Template);
+                    return CreateWorkoutFromTemplate(template);
+                }
             }
-            return null;
-        }
-
-        private void State_StateChanged(object? sender, EventArgs e)
-        {
-            Workout ??= CreateWorkout();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            State.StateChanged -= State_StateChanged;
+            else
+                return await WorkoutService.GetWorkoutById(WorkoutId);
         }
 
         protected async Task HandleValidSubmit()
@@ -124,23 +107,36 @@ namespace Strongapp.UI.Pages
                 var selectedExercises = (List<StrongExerciseWithMetadata>)result.Data;
                 foreach (var exercise in selectedExercises)
                 {
-                    var sets = new List<StrongExerciseSetData>
-                    {
-                        new StrongExerciseSetData { SetOrder = 1 }
-                    };
-                    if (Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance is null)
-                    {
-                        sets = Exercises.First(x => x.ExerciseName == exercise.ExerciseName).PreviousPerformance.Sets;
-                    }
-                    Workout.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, sets.Select(x => new StrongExerciseSetData {
-                        SetOrder = x.SetOrder,
-                        InitialDistance = x.Distance,
-                        InitialReps = x.Reps,
-                        InitialSeconds = x.Seconds,
-                        InitialWeight = x.Weight,
-                    }).ToList()));
+                    Workout.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, GetSets(exercise)));
                 }
             }
+        }
+
+        private List<StrongExerciseSetData> GetSets(StrongExerciseWithMetadata exercise)
+        {
+            var sets = new List<StrongExerciseSetData>
+            {
+                new StrongExerciseSetData { SetOrder = 1 }
+            };
+            var metadata = Exercises.First(x => x.ExerciseName == exercise.ExerciseName);
+            if (metadata.PreviousPerformance is not null)
+            {
+                sets = metadata.PreviousPerformance.Sets;
+            }
+
+            return sets.Select(ConvertSet).ToList();
+        }
+
+        private StrongExerciseSetData ConvertSet(StrongExerciseSetData set)
+        {
+            return new StrongExerciseSetData
+            {
+                SetOrder = set.SetOrder,
+                InitialDistance = set.Distance,
+                InitialReps = set.Reps,
+                InitialSeconds = set.Seconds,
+                InitialWeight = set.Weight,
+            };
         }
 
         public async Task CancelWorkout()
@@ -183,14 +179,7 @@ namespace Strongapp.UI.Pages
                     ExerciseName = x.ExerciseName,
                     BodyPart = x.BodyPart,
                     Category = x.Category,
-                    Sets = x.Sets.Select(y => new StrongExerciseSetData
-                    {
-                        SetOrder = y.SetOrder,
-                        InitialReps = y.Reps,
-                        InitialWeight = y.Weight,
-                        InitialDistance = y.Distance,
-                        InitialSeconds = y.Seconds,
-                    }).ToList()
+                    Sets = x.Sets.Select(ConvertSet).ToList()
                 }).ToList(),
             };
         }
