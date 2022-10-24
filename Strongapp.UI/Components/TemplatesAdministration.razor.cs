@@ -21,13 +21,6 @@ namespace Strongapp.UI.Components
         [Inject]
         public IDispatcher Dispatcher { get; set; } = default!;
 
-        protected override void OnInitialized()
-        {
-            Dispatcher.Dispatch(new FetchTemplatesAction());
-            Dispatcher.Dispatch(new FetchFoldersAction());
-            base.OnInitialized();
-        }
-
         public async Task CreateFolder()
         {
             var formModal = Modal.Show<EditFolderModal>("Create folder");
