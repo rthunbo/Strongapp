@@ -1,43 +1,40 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="float-end">
-            <button class="btn btn-primary btn-sm" @onclick="CreateFolder">
-                <i class="fa fa-folder"></i>
-            </button>
-        </div>
-        <h2>Templates</h2>
-        <br />
-        @if (!State.Value.IsTemplatesLoading)
-        {
-            @if (!State.Value.IsFoldersLoading)
+@if (!State.Value.IsLoading)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="float-end">
+                <button class="btn btn-primary btn-sm" @onclick="CreateFolder">
+                    <i class="fa fa-folder"></i>
+                </button>
+            </div>
+            <h2>Templates</h2>
+            <br />
+            @foreach (var folder in State.Value.Folders)
             {
-                @foreach (var folder in State.Value.Folders)
-                {
-                    <div class="float-end">
-                        <a href="@($"/templates/edit?Folder={folder.FolderName}")" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i>
-                        </a>
-                        <button class="btn btn-primary btn-sm" @onclick="@(() => RenameFolder(folder))">
-                            <i class="fas fa-eraser"></i>
-                        </button>
-                        <button @onclick="@(() => RemoveFolder(folder))" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <h5>@folder.FolderName (@State.Value.Templates.Count(x => !x.IsExampleTemplate && x.FolderName == folder.FolderName))</h5>
-                    <br />
-                    <div class="row">
-                        @foreach (var template in State.Value.Templates.Where(x => !x.IsExampleTemplate && x.FolderName == folder.FolderName))
-                        {
-                            <div class="col-md-6">
-                                <TemplateSummary Template="template"></TemplateSummary>
-                                <br />
-                            </div>
-                        }
-                    </div>
-                }
+                <div class="float-end">
+                    <a href="@($"/templates/edit?Folder={folder.FolderName}")" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <button class="btn btn-primary btn-sm" @onclick="@(() => RenameFolder(folder))">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                    <button @onclick="@(() => RemoveFolder(folder))" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <h5>@folder.FolderName (@State.Value.Templates.Count(x => !x.IsExampleTemplate && x.FolderName == folder.FolderName))</h5>
+                <br />
+                <div class="row">
+                    @foreach (var template in State.Value.Templates.Where(x => !x.IsExampleTemplate && x.FolderName == folder.FolderName))
+                    {
+                        <div class="col-md-6">
+                            <TemplateSummary Template="template"></TemplateSummary>
+                            <br />
+                        </div>
+                    }
+                </div>
             }
             <a href="@($"/templates/edit")" class="btn btn-primary btn-sm float-end">
                 <i class="fas fa-plus"></i>
@@ -64,6 +61,6 @@
                     </div>
                 }
             </div>
-        }
+        </div>
     </div>
-</div>
+}
