@@ -1,0 +1,19 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<div>
+    <h6>History</h6>
+    <ul style="padding-left: 0">
+        @foreach (var measurement in Measurements)
+        {
+            <li style="display: block"><span class="float-end">@measurement.Value kg</span><span><strong>@measurement.Date.ToShortDateString()</strong></span></li>
+        }
+    </ul>
+    <br />
+</div>
+
+@code {
+
+    [Parameter]
+    public List<StrongMeasurement> Measurements { get; set; }
+}

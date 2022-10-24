@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using CsvHelper;
+using Strongapp.API.Controllers;
 using Strongapp.API.Repositories;
 using Strongapp.Models;
 using static Strongapp.Models.StrongExerciseBodyPart;
@@ -16,7 +17,24 @@ namespace Strongapp.API.Database
             var templateRepository = serviceProvider.GetRequiredService<TemplateRepository>();
             var workoutRepository = serviceProvider.GetRequiredService<WorkoutRepository>();
             var exerciseRepository = serviceProvider.GetRequiredService<ExerciseRepository>();
-            
+            var measurementRepository = serviceProvider.GetRequiredService<MeasurementRepository>();
+
+            var measuremments = await measurementRepository.GetAsync();
+            if (!measuremments.Any())
+            {
+                var initialLoad = new List<StrongMeasurement>
+                {
+                    new StrongMeasurement { Name = "Weight", Date = DateTime.Parse("2018-02-18"), Value = 90 },
+                    new StrongMeasurement { Name = "Weight", Date = DateTime.Parse("2018-06-06"), Value = 88 },
+                    new StrongMeasurement { Name = "Weight", Date = DateTime.Parse("2019-09-08"), Value = 76 },
+                    new StrongMeasurement { Name = "Weight", Date = DateTime.Parse("2020-10-20"), Value = 72 },
+                    new StrongMeasurement { Name = "Weight", Date = DateTime.Parse("2020-11-25"), Value = 74 },
+                    new StrongMeasurement { Name = "Weight", Date = DateTime.Parse("2021-05-14"), Value = 68 }
+                };
+
+                foreach (var e in initialLoad) await measurementRepository.CreateAsync(e);
+            }
+
             var exercisesInitialLoad = GetExercises();
             var exercises = await exerciseRepository.GetAsync();
             if (!exercises.Any())

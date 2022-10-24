@@ -10,6 +10,7 @@ builder.Services.AddSingleton<ExerciseRepository>();
 builder.Services.AddSingleton<WorkoutRepository>();
 builder.Services.AddSingleton<TemplateRepository>();
 builder.Services.AddSingleton<FolderRepository>();
+builder.Services.AddSingleton<MeasurementRepository>();
 
 // Add services to the container.
 

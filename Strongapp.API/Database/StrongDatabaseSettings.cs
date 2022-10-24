@@ -13,5 +13,7 @@
         public string TemplatesCollectionName { get; set; } = null!;
 
         public string FoldersCollectionName { get; set; } = null!;
+
+        public string MeasurementsCollectionName { get; set; } = null!;
     }
 }
