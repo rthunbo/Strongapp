@@ -56,34 +56,49 @@ namespace Strongapp.API.Services
             var distancePr = sets.LastOrDefault(x => x.HasDistancePr);
             var volumePr = sets.LastOrDefault(x => x.HasVolumePr);
 
-            var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
-            if (maxWeightSet != null)
+            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight)
             {
-                maxWeightSet.HasWeightPr = weightPr == null || maxWeightSet.Weight > weightPr.Weight;
+                var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
+                if (maxWeightSet != null)
+                {
+                    maxWeightSet.HasWeightPr = weightPr == null || maxWeightSet.Weight > weightPr.Weight;
+                }
             }
-            
-            var maxRepsSet = exercise.Sets.MaxBy(x => x.Reps);
-            if (maxRepsSet != null)
+
+            if (exercise.Category is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.WeightedBodyweight or StrongExerciseCategory.AssistedBodyweight)
             {
-                maxRepsSet.HasRepsPr = repsPr == null || maxRepsSet.Reps > repsPr.Reps;
+                var maxRepsSet = exercise.Sets.MaxBy(x => x.Reps);
+                if (maxRepsSet != null)
+                {
+                    maxRepsSet.HasRepsPr = repsPr == null || maxRepsSet.Reps > repsPr.Reps;
+                }
             }
-            
-            var maxDurationSet = exercise.Sets.MaxBy(x => x.Seconds);
-            if (maxDurationSet != null)
+
+            if (exercise.Category is StrongExerciseCategory.Duration or StrongExerciseCategory.Cardio)
             {
-                maxDurationSet.HasDurationPr = durationPr == null || maxDurationSet.Seconds > durationPr.Seconds;
+                var maxDurationSet = exercise.Sets.MaxBy(x => x.Seconds);
+                if (maxDurationSet != null)
+                {
+                    maxDurationSet.HasDurationPr = durationPr == null || maxDurationSet.Seconds > durationPr.Seconds;
+                }
             }
-            
-            var maxDistanceSet = exercise.Sets.MaxBy(x => x.Distance);
-            if (maxDistanceSet != null)
+
+            if (exercise.Category is StrongExerciseCategory.Cardio)
             {
-                maxDistanceSet.HasDistancePr = distancePr == null || maxDistanceSet.Distance > distancePr.Distance;
+                var maxDistanceSet = exercise.Sets.MaxBy(x => x.Distance);
+                if (maxDistanceSet != null)
+                {
+                    maxDistanceSet.HasDistancePr = distancePr == null || maxDistanceSet.Distance > distancePr.Distance;
+                }
             }
-            
-            var maxVolumeSet = exercise.Sets.MaxBy(x => x.Volume);
-            if (maxVolumeSet != null)
+
+            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight)
             {
-                maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.Volume > volumePr.Volume;
+                var maxVolumeSet = exercise.Sets.MaxBy(x => x.Volume);
+                if (maxVolumeSet != null)
+                {
+                    maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.Volume > volumePr.Volume;
+                }
             }
         }
 

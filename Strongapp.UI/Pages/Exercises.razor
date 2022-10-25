@@ -40,7 +40,10 @@
                                 <td>
                                     <span><strong>@exercise.ExerciseName</strong></span>
                                     <br>
-                                    <span class="float-end"><FormatSet Category="exercise.Category" Set="@exercise.BestSet"/></span>
+                                    <div class="float-end">
+                                        <FormatSet Category="exercise.Category" Set="@exercise.BestSet"/>
+                                        <buttonn @onclick="@(() => ShowExerciseHistoryModal(exercise.ExerciseName))" class="btn btn-primary btn-sm"><i class="fas fa-list" /></buttonn>
+                                    </div>
                                     <span>@exercise.BodyPart</span>
                                 </td>
                             </tr>
