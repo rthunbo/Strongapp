@@ -28,5 +28,28 @@ namespace Strongapp.Models
         public int? InitialSeconds { get; set; }
 
         public bool IsComplete { get; set; }
+
+        public decimal? Volume { get; set; }
+
+        public bool HasWeightPr { get; set; }
+
+        public bool HasRepsPr { get; set; }
+
+        public bool HasDurationPr { get; set; }
+
+        public bool HasDistancePr { get; set; }
+
+        public bool HasVolumePr { get; set; }
+
+        public int GetNumberOfPrs()
+        {
+            int numPrs = 0;
+            if (HasDurationPr) numPrs++;
+            if (HasRepsPr) numPrs++;
+            if (HasDistancePr) numPrs++;
+            if (HasVolumePr) numPrs++;
+            if (HasWeightPr) numPrs++;
+            return numPrs;
+        }
     }
 }

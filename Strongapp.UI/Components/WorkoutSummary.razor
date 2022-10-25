@@ -1,5 +1,6 @@
 ﻿<Card Title="@Workout.WorkoutName" SubTitle="@Workout.Date.ToLongDateString()" 
       EditUrl="@($"/workouts/edit/{Workout.Id}")" OnRemove="RemoveWorkout">
+    <p><i class="fas fa-weight-hanging"></i> @Workout.GetVolume() kg &nbsp; &nbsp; <i class="fas fa-medal"></i> @Workout.GetNumberOfPrs()</p>
     <table class="table table-sm">
         <thead>
             <tr>

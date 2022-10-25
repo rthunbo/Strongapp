@@ -2,6 +2,7 @@
 using CsvHelper;
 using Strongapp.API.Controllers;
 using Strongapp.API.Repositories;
+using Strongapp.API.Services;
 using Strongapp.Models;
 using static Strongapp.Models.StrongExerciseBodyPart;
 using static Strongapp.Models.StrongExerciseCategory;
@@ -18,6 +19,7 @@ namespace Strongapp.API.Database
             var workoutRepository = serviceProvider.GetRequiredService<WorkoutRepository>();
             var exerciseRepository = serviceProvider.GetRequiredService<ExerciseRepository>();
             var measurementRepository = serviceProvider.GetRequiredService<MeasurementRepository>();
+            var workoutService = serviceProvider.GetRequiredService<WorkoutService>();
 
             var measuremments = await measurementRepository.GetAsync();
             if (!measuremments.Any())
@@ -75,6 +77,8 @@ namespace Strongapp.API.Database
                             }).ToList()
                     }).ToList();
 
+                foreach (var w in workoutsInitialLoad) await workoutService.UpdateVolume(w);
+                workoutService.UpdatePersonalRecords(workoutsInitialLoad);
                 foreach (var w in workoutsInitialLoad) await workoutRepository.CreateAsync(w);
             }
 

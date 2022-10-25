@@ -1,5 +1,6 @@
 using Strongapp.API.Database;
 using Strongapp.API.Repositories;
+using Strongapp.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddSingleton<WorkoutRepository>();
 builder.Services.AddSingleton<TemplateRepository>();
 builder.Services.AddSingleton<FolderRepository>();
 builder.Services.AddSingleton<MeasurementRepository>();
+
+builder.Services.AddSingleton<WorkoutService>();
 
 // Add services to the container.
 
