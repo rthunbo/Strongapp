@@ -22,13 +22,7 @@ namespace Strongapp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<StrongWorkout>> Get()
-        {
-            return await _repository.GetAsync();
-        }
-
-        [HttpGet("paged")]
-        public async Task<StrongWorkoutList> GetPaged([FromQuery] int start, [FromQuery] int count)
+        public async Task<StrongWorkoutList> Get([FromQuery] int start, [FromQuery] int count)
         {
             var items = _repository.AsQueryable()
                 .OrderByDescending(x => x.Date)

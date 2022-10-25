@@ -20,18 +20,6 @@ namespace Strongapp.API.Controllers
             _exerciseRepository = exerciseRepository;
         }
 
-        [HttpGet("search")]
-        public async Task<IEnumerable<StrongExercise>> Search([FromQuery] string? searchPhrase)
-        {
-            var exercises = await _exerciseRepository.GetAsync();
-            var results = exercises;
-            if (!string.IsNullOrEmpty(searchPhrase))
-                results = results
-                    .Where(x => x.ExerciseName.Contains(searchPhrase))
-                    .ToList();
-            return results;
-        }
-
         [HttpGet("history")]
         public async Task<StrongExerciseDataHistoryList> GetHistory([FromQuery] string name, [FromQuery] int start, [FromQuery] int count)
         {

@@ -4,8 +4,6 @@ namespace Strongapp.UI.Services
 {
     public interface IWorkoutService
     {
-        Task<List<StrongWorkout>> GetWorkouts();
-
         Task<StrongWorkout> GetWorkoutById(string id);
 
         Task<string> CreateWorkout(StrongWorkout workout);

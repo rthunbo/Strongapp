@@ -25,11 +25,5 @@ namespace Strongapp.UI.Services
             var exercises = await http.GetFromJsonAsync<List<StrongExerciseWithMetadata>>($"exercises");
             return exercises;
         }
-
-        public async Task<List<StrongExercise>> Search(string searchPhrase)
-        {
-            var exercises = await http.GetFromJsonAsync<List<StrongExercise>>($"exercises/search?searchPhrase={searchPhrase}");
-            return exercises;
-        }
     }
 }

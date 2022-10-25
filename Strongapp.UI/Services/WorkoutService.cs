@@ -12,12 +12,6 @@ namespace Strongapp.UI.Services
             this.http = http;
         }
 
-        public async Task<List<StrongWorkout>> GetWorkouts()
-        {
-            var workouts = await http.GetFromJsonAsync<List<StrongWorkout>>("workouts");
-            return workouts;
-        }
-
         public async Task<StrongWorkout> GetWorkoutById(string id)
         {
             var workout = await http.GetFromJsonAsync<StrongWorkout>($"workouts/{id}");
@@ -43,7 +37,7 @@ namespace Strongapp.UI.Services
 
         public async Task<StrongWorkoutList> GetWorkouts(int startIndex, int count, CancellationToken cancellationToken)
         {
-            var workouts = await http.GetFromJsonAsync<StrongWorkoutList>($"workouts/paged?start={startIndex}&count={count}", cancellationToken);
+            var workouts = await http.GetFromJsonAsync<StrongWorkoutList>($"workouts?start={startIndex}&count={count}", cancellationToken);
             return workouts;
         }
     }
