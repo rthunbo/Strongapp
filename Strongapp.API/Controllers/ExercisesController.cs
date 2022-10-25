@@ -33,7 +33,7 @@ namespace Strongapp.API.Controllers
         }
 
         [HttpGet("history")]
-        public async Task<IEnumerable<StrongExerciseDataHistory>> GetHistory([FromQuery] string name)
+        public async Task<StrongExerciseDataHistoryList> GetHistory([FromQuery] string name, [FromQuery] int start, [FromQuery] int count)
         {
             var workouts = await _workoutRepository.GetAsync();
             var exerciseHistory = new List<StrongExerciseDataHistory>();
@@ -50,7 +50,15 @@ namespace Strongapp.API.Controllers
                     });
                 }
             }
-            return exerciseHistory;
+
+            var items = exerciseHistory
+                .OrderByDescending(x => x.Date)
+                .Skip(start)
+                .Take(count)
+                .ToList();
+            var totalCount = exerciseHistory.Count;
+
+            return new StrongExerciseDataHistoryList { Items = items, TotalItemCount = totalCount };
         }
 
         [HttpGet]

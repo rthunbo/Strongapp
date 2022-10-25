@@ -47,9 +47,7 @@ namespace Strongapp.UI.Pages
 
         public async Task ShowExerciseHistoryModal(string exerciseName, StrongExerciseCategory exerciseCategory)
         {
-            var exerciseHistory = (await ExerciseService.GetHistory(exerciseName)).OrderByDescending(x => x.Date).ToList();
             var modalParameters = new ModalParameters();
-            modalParameters.Add("ExerciseHistory", exerciseHistory);
             modalParameters.Add("ExerciseName", exerciseName);
             modalParameters.Add("ExerciseCategory", exerciseCategory);
             Modal.Show<ExerciseHistoryModal>(exerciseName, modalParameters);

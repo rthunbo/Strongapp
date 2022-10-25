@@ -2,8 +2,7 @@
 @using Blazored.Modal.Services
 
 <div style="max-height: 600px; overflow-y: auto">
-    @foreach (var exerciseHistory in ExerciseHistory)
-    {
+    <Virtualize ItemsProvider="LoadExerciseHistory" Context="exerciseHistory">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">@exerciseHistory.WorkoutName</h5>
@@ -41,7 +40,7 @@
             </div>
         </div>
         <br />
-    }
+    </Virtualize>
 </div>
 
 @code {
@@ -52,6 +51,12 @@
     [Parameter]
     public StrongExerciseCategory ExerciseCategory { get; set; }
 
-    [Parameter]
-    public List<StrongExerciseDataHistory> ExerciseHistory { get; set; } = default!;
+    [Inject]
+    public IExerciseService ExerciseService { get; set; } = default!;
+
+    public async ValueTask<ItemsProviderResult<StrongExerciseDataHistory>> LoadExerciseHistory(ItemsProviderRequest request)
+    {
+        var result = await ExerciseService.GetHistory(ExerciseName, request.StartIndex, request.Count, request.CancellationToken);
+        return new ItemsProviderResult<StrongExerciseDataHistory>(result.Items, result.TotalItemCount);
+    }
 }

@@ -14,9 +14,9 @@ namespace Strongapp.UI.Services
             this.http = http;
         }
 
-        public async Task<List<StrongExerciseDataHistory>> GetHistory(string name)
+        public async Task<StrongExerciseDataHistoryList> GetHistory(string name, int start, int count, CancellationToken cancellationToken)
         {
-            var exercises = await http.GetFromJsonAsync<List<StrongExerciseDataHistory>>($"exercises/history?name={name}");
+            var exercises = await http.GetFromJsonAsync<StrongExerciseDataHistoryList>($"exercises/history?name={name}&start={start}&count={count}", cancellationToken);
             return exercises;
         }
 
