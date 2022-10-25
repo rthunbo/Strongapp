@@ -31,79 +31,59 @@ namespace Strongapp.API.Services
         {
             foreach (var workout in workouts)
             {
+                var exerciseDataList = workouts
+                    .Where(x => x.Date < workout.Date)
+                    .SelectMany(x => x.ExerciseData)
+                    .ToList();
+
                 foreach (var exercise in workout.ExerciseData)
                 {
-                    var exercisesHistory = workouts
-                        .SelectMany(x => x.ExerciseData)
-                        .Where(x => x.ExerciseName == exercise.ExerciseName && x.Date < workout.Date);
+                    var exerciseHistory = exerciseDataList
+                        .Where(x => x.ExerciseName == exercise.ExerciseName);
                     
-                    UpdatePersonalRecords(exercise, exercisesHistory);
+                    UpdatePersonalRecords(exercise, exerciseHistory);
                 }
             }
         }
 
-        private static void UpdatePersonalRecords(StrongExerciseData exercise, IEnumerable<StrongExerciseData> exercisesHistory)
+        private static void UpdatePersonalRecords(StrongExerciseData exercise, IEnumerable<StrongExerciseData> exerciseHistory)
         {
-            var sets = exercisesHistory.SelectMany(x => x.Sets).ToList();
+            var sets = exerciseHistory.SelectMany(x => x.Sets).ToList();
 
             var weightPr = sets.LastOrDefault(x => x.HasWeightPr);
-            
+            var repsPr = sets.LastOrDefault(x => x.HasRepsPr);
+            var durationPr = sets.LastOrDefault(x => x.HasDurationPr);
+            var distancePr = sets.LastOrDefault(x => x.HasDistancePr);
+            var volumePr = sets.LastOrDefault(x => x.HasVolumePr);
+
             var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
             if (maxWeightSet != null)
             {
-                maxWeightSet.HasWeightPr = false;
-                if (weightPr == null || maxWeightSet.Weight > weightPr.Weight)
-                {
-                    maxWeightSet.HasWeightPr = true;
-                }
+                maxWeightSet.HasWeightPr = weightPr == null || maxWeightSet.Weight > weightPr.Weight;
             }
-
-            var repsPr = sets.LastOrDefault(x => x.HasRepsPr);
             
             var maxRepsSet = exercise.Sets.MaxBy(x => x.Reps);
             if (maxRepsSet != null)
             {
-                maxRepsSet.HasRepsPr = false;
-                if (repsPr == null || maxRepsSet.Reps > repsPr.Reps)
-                {
-                    maxRepsSet.HasRepsPr = true;
-                }
+                maxRepsSet.HasRepsPr = repsPr == null || maxRepsSet.Reps > repsPr.Reps;
             }
-
-            var durationPr = sets.LastOrDefault(x => x.HasDurationPr);
             
             var maxDurationSet = exercise.Sets.MaxBy(x => x.Seconds);
             if (maxDurationSet != null)
             {
-                maxDurationSet.HasDurationPr = false;
-                if (durationPr == null || maxDurationSet.Seconds > durationPr.Seconds)
-                {
-                    maxDurationSet.HasDurationPr = true;
-                }
+                maxDurationSet.HasDurationPr = durationPr == null || maxDurationSet.Seconds > durationPr.Seconds;
             }
-
-            var distancePr = sets.LastOrDefault(x => x.HasDistancePr);
             
             var maxDistanceSet = exercise.Sets.MaxBy(x => x.Distance);
             if (maxDistanceSet != null)
             {
-                maxDistanceSet.HasDistancePr = false;
-                if (distancePr == null || maxDistanceSet.Distance > distancePr.Distance)
-                {
-                    maxDistanceSet.HasDistancePr = true;
-                }
+                maxDistanceSet.HasDistancePr = distancePr == null || maxDistanceSet.Distance > distancePr.Distance;
             }
-
-            var volumePr = sets.LastOrDefault(x => x.HasVolumePr);
             
             var maxVolumeSet = exercise.Sets.MaxBy(x => x.Volume);
             if (maxVolumeSet != null)
             {
-                maxVolumeSet.HasVolumePr = false;
-                if (volumePr == null || maxVolumeSet.Volume > volumePr.Volume)
-                {
-                    maxVolumeSet.HasVolumePr = true;
-                }
+                maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.Volume > volumePr.Volume;
             }
         }
 
