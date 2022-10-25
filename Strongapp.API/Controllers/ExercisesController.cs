@@ -24,27 +24,22 @@ namespace Strongapp.API.Controllers
         public async Task<StrongExerciseDataHistoryList> GetHistory([FromQuery] string name, [FromQuery] int start, [FromQuery] int count)
         {
             var workouts = await _workoutRepository.GetAsync();
-            var exerciseHistory = new List<StrongExerciseDataHistory>();
 
-            foreach (var workout in workouts)
-            {
-                if (workout.ExerciseData.Any(x => x.ExerciseName == name))
-                {
-                    exerciseHistory.Add(new StrongExerciseDataHistory
-                    {
-                        Date = workout.Date,
-                        WorkoutName = workout.WorkoutName,
-                        Sets = workout.ExerciseData.First(x => x.ExerciseName == name).Sets
-                    });
-                }
-            }
+            var matchedWorkouts = workouts
+                .Where(x => x.ExerciseData.Any(x => x.ExerciseName == name));
 
-            var items = exerciseHistory
+            var items = matchedWorkouts
                 .OrderByDescending(x => x.Date)
                 .Skip(start)
                 .Take(count)
+                .Select(x => new StrongExerciseDataHistory
+                {
+                    Date = x.Date,
+                    WorkoutName = x.WorkoutName,
+                    Sets = x.ExerciseData.First(x => x.ExerciseName == name).Sets
+                })
                 .ToList();
-            var totalCount = exerciseHistory.Count;
+            var totalCount = matchedWorkouts.Count();
 
             return new StrongExerciseDataHistoryList { Items = items, TotalItemCount = totalCount };
         }
