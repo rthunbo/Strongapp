@@ -208,7 +208,6 @@ namespace Strongapp.UI.Pages
                 {
                     BodyPart = exerciseData.BodyPart,
                     Category = exerciseData.Category,
-                    Date = exerciseData.Date,
                     ExerciseName = exerciseData.ExerciseName,
                 };
                 var sets = new List<StrongExerciseSetData>();

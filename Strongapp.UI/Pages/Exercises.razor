@@ -42,7 +42,7 @@
                                     <br>
                                     <div class="float-end">
                                         <FormatSet Category="exercise.Category" Set="@exercise.BestSet"/>
-                                        <buttonn @onclick="@(() => ShowExerciseHistoryModal(exercise.ExerciseName))" class="btn btn-primary btn-sm"><i class="fas fa-list" /></buttonn>
+                                        <buttonn @onclick="@(() => ShowExerciseHistoryModal(exercise.ExerciseName, exercise.Category))" class="btn btn-primary btn-sm"><i class="fas fa-list" /></buttonn>
                                     </div>
                                     <span>@exercise.BodyPart</span>
                                 </td>

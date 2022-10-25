@@ -21,8 +21,6 @@ namespace Strongapp.Models
             Sets = sets;
         }
 
-        public DateTime Date { get; set; } = DateTime.Now;
-
         public string? ExerciseName { get; set; }
 
         public StrongExerciseBodyPart BodyPart { get; set; }

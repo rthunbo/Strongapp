@@ -63,7 +63,6 @@ namespace Strongapp.API.Database
                             .GroupBy(x => new { x.Date, x.WorkoutName, x.ExerciseName })
                             .Select(g => new StrongExerciseData
                             {
-                                Date = g.Key.Date,
                                 ExerciseName = g.Key.ExerciseName,
                                 Category = exercisesInitialLoad.First(x => x.ExerciseName == g.Key.ExerciseName)!.Category,
                                 Sets = g.Select(x => new StrongExerciseSetData

@@ -25,7 +25,7 @@ namespace Strongapp.UI.Pages
         public IModalService Modal { get; set; }
 
         [Inject]
-        public IWorkoutService WorkoutService { get; set; }
+        public IExerciseService ExerciseService { get; set; }
 
         [Inject]
         public IState<AppStore> State { get; set; } = default!;
@@ -45,17 +45,13 @@ namespace Strongapp.UI.Pages
             }
         }
 
-        protected override async Task OnInitializedAsync()
+        public async Task ShowExerciseHistoryModal(string exerciseName, StrongExerciseCategory exerciseCategory)
         {
-            Workouts = await WorkoutService.GetWorkouts();
-        }
-
-        public void ShowExerciseHistoryModal(string exerciseName)
-        {
-            var workouts = Workouts.Where(x => x.ExerciseData.Any(x => x.ExerciseName == exerciseName)).OrderByDescending(x => x.Date).ToList();
+            var exerciseHistory = (await ExerciseService.GetHistory(exerciseName)).OrderByDescending(x => x.Date).ToList();
             var modalParameters = new ModalParameters();
-            modalParameters.Add("Workouts", workouts);
+            modalParameters.Add("ExerciseHistory", exerciseHistory);
             modalParameters.Add("ExerciseName", exerciseName);
+            modalParameters.Add("ExerciseCategory", exerciseCategory);
             Modal.Show<ExerciseHistoryModal>(exerciseName, modalParameters);
         }
     }

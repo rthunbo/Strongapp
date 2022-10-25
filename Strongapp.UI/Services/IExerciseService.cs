@@ -6,7 +6,7 @@ namespace Strongapp.UI.Services
     {
         Task<List<StrongExercise>> Search(string searchPhrase);
 
-        Task<List<StrongExerciseData>> GetHistory(string name);
+        Task<List<StrongExerciseDataHistory>> GetHistory(string name);
 
         Task<List<StrongExerciseWithMetadata>> GetExercises();
     }

@@ -33,13 +33,24 @@ namespace Strongapp.API.Controllers
         }
 
         [HttpGet("history")]
-        public async Task<IEnumerable<StrongExerciseData>> GetHistory([FromQuery] string name)
+        public async Task<IEnumerable<StrongExerciseDataHistory>> GetHistory([FromQuery] string name)
         {
             var workouts = await _workoutRepository.GetAsync();
-            var exercisesHistory = workouts
-                .SelectMany(x => x.ExerciseData)
-                .Where(x => x.ExerciseName == name);
-            return exercisesHistory;
+            var exerciseHistory = new List<StrongExerciseDataHistory>();
+
+            foreach (var workout in workouts)
+            {
+                if (workout.ExerciseData.Any(x => x.ExerciseName == name))
+                {
+                    exerciseHistory.Add(new StrongExerciseDataHistory
+                    {
+                        Date = workout.Date,
+                        WorkoutName = workout.WorkoutName,
+                        Sets = workout.ExerciseData.First(x => x.ExerciseName == name).Sets
+                    });
+                }
+            }
+            return exerciseHistory;
         }
 
         [HttpGet]

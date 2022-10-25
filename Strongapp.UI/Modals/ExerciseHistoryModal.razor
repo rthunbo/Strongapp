@@ -2,19 +2,19 @@
 @using Blazored.Modal.Services
 
 <div style="max-height: 600px; overflow-y: auto">
-    @foreach (var workout in Workouts)
+    @foreach (var exerciseHistory in ExerciseHistory)
     {
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">@workout.WorkoutName</h5>
-                <p class="card-text">@workout.Date.ToLongDateString()</p>
+                <h5 class="card-title">@exerciseHistory.WorkoutName</h5>
+                <p class="card-text">@exerciseHistory.Date.ToLongDateString()</p>
                 <ul style="padding-left: 0">
                     <li style="display: block"><strong>Sets Performed</strong></li>
-                    @foreach (var set in workout.ExerciseData.First(x => x.ExerciseName == ExerciseName).Sets)
+                    @foreach (var set in exerciseHistory.Sets)
                     {
                         <li style="display: block">
                             <span>@set.SetOrder</span>&nbsp; 
-                            <FormatSet Set="set" Category="workout.ExerciseData.First(x => x.ExerciseName == ExerciseName).Category" />
+                            <FormatSet Set="set" Category="ExerciseCategory" />
                             @if (set.HasWeightPr)
                             {
                                 <span>[WEIGHT]</span>
@@ -50,5 +50,8 @@
     public string ExerciseName { get; set; }
 
     [Parameter]
-    public List<StrongWorkout> Workouts { get; set; }
+    public StrongExerciseCategory ExerciseCategory { get; set; }
+
+    [Parameter]
+    public List<StrongExerciseDataHistory> ExerciseHistory { get; set; } = default!;
 }
