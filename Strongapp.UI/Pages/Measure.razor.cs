@@ -31,5 +31,20 @@ namespace Strongapp.UI.Pages
             modalParameters.Add("Measurements", measurements);
             Modal.Show<MeasurementHistoryModal>(measurementName, modalParameters);
         }
+
+        public async Task ShowAddMeasurementModal(string measurementName, string measurementUnit)
+        {
+            var modalParameters = new ModalParameters();
+            modalParameters.Add("MeasurementName", measurementName);
+            modalParameters.Add("MeasurementUnit", measurementUnit);
+            var formModal = Modal.Show<AddMeasurementModal>("Add Measurement", modalParameters);
+            var result = await formModal.Result;
+            if (!result.Cancelled)
+            {
+                var measurement = (StrongMeasurement)result.Data;
+                await MeasurementService.CreateMeasurement(measurement);
+                Measurements = await MeasurementService.GetMeasurements();
+            }
+        }
     }
 }

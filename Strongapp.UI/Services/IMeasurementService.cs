@@ -5,5 +5,7 @@ namespace Strongapp.UI.Services
     public interface IMeasurementService
     {
         Task<List<StrongMeasurement>> GetMeasurements();
+
+        Task CreateMeasurement(StrongMeasurement measurement);
     }
 }

@@ -15,7 +15,7 @@
                                         <span>@MostRecentWeightMeasurement.Value kg &nbsp;</span>
                                     }
                                     <button @onclick="@(() => ShowMeasurementHistoryModal("Weight"))" class="btn btn-primary btn-sm"><i class="fas fa-list" /></button>
-                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus" /></button>
+                                    <button @onclick="@(() => ShowAddMeasurementModal("Weight", "kg"))" class="btn btn-primary btn-sm"><i class="fas fa-plus" /></button>
                                 </div>
                                 Weight
                             </td>
@@ -24,7 +24,7 @@
                             <td>
                                 <div class="float-end">
                                     <buttonn @onclick="@(() => ShowMeasurementHistoryModal("Body Fat"))" class="btn btn-primary btn-sm"><i class="fas fa-list" /></buttonn>
-                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus"/></button>
+                                    <buttonn @onclick="@(() => ShowAddMeasurementModal("Body Fat", "%"))" class="btn btn-primary btn-sm"><i class="fas fa-plus"/></buttonn>
                                 </div>
                                 Body Fat
                             </td>
@@ -33,7 +33,7 @@
                             <td>
                                 <div class="float-end">
                                     <button @onclick="@(() => ShowMeasurementHistoryModal("Caloric Intake"))" class="btn btn-primary btn-sm"><i class="fas fa-list" /></button>
-                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus" /></button>
+                                    <buttonn @onclick="@(() => ShowAddMeasurementModal("Caloric Intake", "kcal"))" class="btn btn-primary btn-sm"><i class="fas fa-plus" /></buttonn>
                                 </div>
                                 Caloric Intake
                             </td>

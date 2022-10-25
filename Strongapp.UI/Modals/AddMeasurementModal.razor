@@ -1,0 +1,43 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<div>
+    <EditForm Model="Measurement">
+        <div class="form-group">
+            <label>@MeasurementName (@MeasurementUnit)</label>
+            <InputNumber @bind-Value="Measurement.Value" class="form-control" />
+        </div>
+    </EditForm>
+    <br />
+    <ul style="padding-left: 0">
+         <li style="display: block"><span class="float-end">@Measurement.Date.ToLongDateString() at @Measurement.Date.ToShortTimeString()</span><span><strong>Date</strong></span></li>
+    </ul>
+    <button @onclick="Save" class="btn btn-primary float-end">Save</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public string MeasurementName { get; set; }
+
+    [Parameter]
+    public string MeasurementUnit { get; set; }
+
+    public StrongMeasurement Measurement { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Measurement = new StrongMeasurement
+        {
+            Date = DateTime.Now,
+            Name = MeasurementName
+        };
+    }
+
+    void Save()
+    {
+        BlazoredModal.CloseAsync(ModalResult.Ok(Measurement));
+    }
+}

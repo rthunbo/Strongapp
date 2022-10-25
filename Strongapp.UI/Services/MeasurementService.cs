@@ -17,5 +17,10 @@ namespace Strongapp.UI.Services
             var measurements = await http.GetFromJsonAsync<List<StrongMeasurement>>("measurements");
             return measurements;
         }
+
+        public async Task CreateMeasurement(StrongMeasurement measurement)
+        {
+            await http.PostAsJsonAsync<StrongMeasurement>($"measurements", measurement);
+        }
     }
 }
