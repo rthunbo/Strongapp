@@ -31,6 +31,9 @@ namespace Strongapp.Models
 
         public decimal? Volume { get; set; }
 
+        // ReSharper disable once InconsistentNaming
+        public decimal? OneRM { get; set; }
+
         public bool HasWeightPr { get; set; }
 
         public bool HasRepsPr { get; set; }
@@ -40,6 +43,9 @@ namespace Strongapp.Models
         public bool HasDistancePr { get; set; }
 
         public bool HasVolumePr { get; set; }
+
+        public bool HasOneRMPr { get; set; }
+
 
         public int GetNumberOfPrs()
         {

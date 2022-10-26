@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Strongapp.Models
 {
-    public class StrongPerformance
+    public class StrongPersonalRecord
     {
         public DateTime? Date { get; set; }
 
-        public StrongExerciseSetData Set { get; set; }
+        public decimal? Weight { get; set; }
+
+        public int? Reps { get; set; }
     }
 }

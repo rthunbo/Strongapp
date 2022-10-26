@@ -14,6 +14,7 @@ builder.Services.AddSingleton<FolderRepository>();
 builder.Services.AddSingleton<MeasurementRepository>();
 
 builder.Services.AddSingleton<WorkoutService>();
+builder.Services.AddSingleton<OneRMWeightCalculator>();
 
 // Add services to the container.
 

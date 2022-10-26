@@ -45,6 +45,7 @@ namespace Strongapp.API.Controllers
         public async Task<IActionResult> Post([FromBody] StrongWorkout workout)
         {
             await _service.UpdateVolume(workout);
+            await _service.UpdateOneRM(workout);
             await _repository.CreateAsync(workout);
 
             var workouts = await _repository.GetAsync();
@@ -58,6 +59,7 @@ namespace Strongapp.API.Controllers
         public async Task Put(string id, [FromBody] StrongWorkout workout)
         {
             await _service.UpdateVolume(workout);
+            await _service.UpdateOneRM(workout);
             await _repository.UpdateAsync(id, workout);
 
             var workouts = await _repository.GetAsync();

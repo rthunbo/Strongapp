@@ -76,7 +76,11 @@ namespace Strongapp.API.Database
                             }).ToList()
                     }).ToList();
 
-                foreach (var w in workoutsInitialLoad) await workoutService.UpdateVolume(w);
+                foreach (var w in workoutsInitialLoad)
+                {
+                    await workoutService.UpdateVolume(w);
+                    await workoutService.UpdateOneRM(w);
+                }
                 workoutService.UpdatePersonalRecords(workoutsInitialLoad);
                 foreach (var w in workoutsInitialLoad) await workoutRepository.CreateAsync(w);
             }

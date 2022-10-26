@@ -9,10 +9,12 @@ namespace Strongapp.API.Services
     public class WorkoutService
     {
         private readonly MeasurementRepository _repository;
+        private readonly OneRMWeightCalculator _oneRmWeightCalculator;
 
-        public WorkoutService(MeasurementRepository repository)
+        public WorkoutService(MeasurementRepository repository, OneRMWeightCalculator oneRmWeightCalculator)
         {
             _repository = repository;
+            _oneRmWeightCalculator = oneRmWeightCalculator;
         }
 
         public async Task UpdateVolume(StrongWorkout workout)
@@ -23,6 +25,17 @@ namespace Strongapp.API.Services
                 foreach (var set in exercise.Sets)
                 {
                     set.Volume = ComputeVolume(exercise.Category, bodyweight, set);
+                }
+            }
+        }
+
+        public async Task UpdateOneRM(StrongWorkout workout)
+        {
+            foreach (var exercise in workout.ExerciseData)
+            {
+                foreach (var set in exercise.Sets)
+                {
+                    set.OneRM = ComputeOneRM(exercise.Category, set);
                 }
             }
         }
@@ -55,6 +68,8 @@ namespace Strongapp.API.Services
             var durationPr = sets.LastOrDefault(x => x.HasDurationPr);
             var distancePr = sets.LastOrDefault(x => x.HasDistancePr);
             var volumePr = sets.LastOrDefault(x => x.HasVolumePr);
+            // ReSharper disable once InconsistentNaming
+            var oneRMPr = sets.LastOrDefault(x => x.HasOneRMPr);
 
             if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight)
             {
@@ -100,6 +115,16 @@ namespace Strongapp.API.Services
                     maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.Volume > volumePr.Volume;
                 }
             }
+
+            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
+            {
+                // ReSharper disable once InconsistentNaming
+                var maxOneRMSet = exercise.Sets.MaxBy(x => x.OneRM);
+                if (maxOneRMSet != null)
+                {
+                    maxOneRMSet.HasOneRMPr = oneRMPr == null || maxOneRMSet.OneRM > oneRMPr.OneRM;
+                }
+            }
         }
 
         private async Task<decimal> GetBodyweight(DateTime date)
@@ -135,6 +160,17 @@ namespace Strongapp.API.Services
                 StrongExerciseCategory.Duration => 0,
                 _ => 0
             };
+        }
+
+        public decimal? ComputeOneRM(StrongExerciseCategory category, StrongExerciseSetData set)
+        {
+            if (category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell
+                or StrongExerciseCategory.MachineOther)
+            {
+                return _oneRmWeightCalculator.CalculatePredictedOneRMWeight(set.Weight.Value, set.Reps.Value);
+            }
+
+            return null;
         }
     }
 }
