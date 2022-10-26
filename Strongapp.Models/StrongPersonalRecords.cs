@@ -8,12 +8,13 @@ namespace Strongapp.Models
 {
     public class StrongPersonalRecords
     {
-        public StrongPersonalRecord OneRM { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public StrongPersonalRecord? OneRM { get; set; }
         
-        public StrongPersonalRecord Weight { get; set; }
+        public StrongPersonalRecord? Weight { get; set; }
         
-        public StrongPersonalRecord MaxVolume { get; set; }
+        public StrongPersonalRecord? MaxVolume { get; set; }
 
-        public List<StrongPredictedPerformance> PredictedPerformances { get; set; }
+        public List<StrongPredictedPerformance>? PredictedPerformances { get; set; }
     }
 }

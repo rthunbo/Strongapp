@@ -1,0 +1,36 @@
+﻿<div style="max-height: 600px; overflow-y: auto; margin: 20px">
+    @if (ExerciseCategory is StrongExerciseCategory.Dumbbell or StrongExerciseCategory.Barbell or StrongExerciseCategory.MachineOther)
+    {
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>Reps</th>
+                <th>Best performance</th>
+                <th>Predicted</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var predictedPerformance in PersonalRecords.PredictedPerformances)
+            {
+                <tr>
+                    <td>@predictedPerformance.Reps</td>
+                    <td>
+                        @if (predictedPerformance.BestPerformance != null)
+                        {
+                            <span>@predictedPerformance.BestPerformance.Weight kg (x @predictedPerformance.BestPerformance.Reps)</span>
+                            <br/>
+                            <span>@predictedPerformance.BestPerformance.Date.Value.ToShortDateString()</span>
+                        }
+                    </td>
+                    <td>
+                        @if (predictedPerformance.Predicted != null)
+                        {
+                            <span>@predictedPerformance.Predicted kg</span>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

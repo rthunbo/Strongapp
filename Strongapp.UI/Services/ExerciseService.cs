@@ -2,6 +2,7 @@
 using Strongapp.Models;
 using System.Net.Http.Json;
 using System.Xml.Linq;
+using System.Threading;
 
 namespace Strongapp.UI.Services
 {
@@ -24,6 +25,12 @@ namespace Strongapp.UI.Services
         {
             var exercises = await http.GetFromJsonAsync<List<StrongExerciseWithMetadata>>($"exercises");
             return exercises;
+        }
+
+        public async Task<StrongPersonalRecords> GetPersonalRecords(string name)
+        {
+            var personalRecords = await http.GetFromJsonAsync<StrongPersonalRecords>($"exercises/records?name={name}");
+            return personalRecords;
         }
     }
 }

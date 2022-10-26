@@ -7,5 +7,7 @@ namespace Strongapp.UI.Services
         Task<StrongExerciseDataHistoryList> GetHistory(string name, int start, int count, CancellationToken cancellationToken);
 
         Task<List<StrongExerciseWithMetadata>> GetExercises();
+
+        Task<StrongPersonalRecords> GetPersonalRecords(string name);
     }
 }

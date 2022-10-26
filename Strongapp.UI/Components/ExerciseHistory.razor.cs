@@ -7,7 +7,7 @@ namespace Strongapp.UI.Components
 {
     public partial class ExerciseHistory
     {
-         [Parameter]
+        [Parameter]
         public string ExerciseName { get; set; }
 
         [Parameter]
