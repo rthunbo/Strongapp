@@ -16,7 +16,7 @@ public class CsvRecord
 
     public int Reps { get; set; }
 
-    public int Distance { get; set; }
+    public decimal Distance { get; set; }
 
     public int Seconds { get; set; }
 

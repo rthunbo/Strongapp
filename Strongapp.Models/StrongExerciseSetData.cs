@@ -19,9 +19,9 @@ namespace Strongapp.Models
 
         public int? InitialReps { get; set; }
 
-        public int? Distance { get; set; }
+        public decimal? Distance { get; set; }
 
-        public int? InitialDistance { get; set; }
+        public decimal? InitialDistance { get; set; }
 
         public int? Seconds { get; set; }
 

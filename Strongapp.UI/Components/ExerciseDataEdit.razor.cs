@@ -97,7 +97,8 @@ namespace Strongapp.UI.Components
             await OnModified.InvokeAsync();
         }
 
-        private async Task DistanceChanged(StrongExerciseSetData Set, int? value)
+        private async Task DistanceChanged(StrongExerciseSetData Set, decimal
+            ? value)
         {
             Set.Distance = value;
             if (value == null)

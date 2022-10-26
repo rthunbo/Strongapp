@@ -79,7 +79,7 @@
             @if (ExerciseData.Category is StrongExerciseCategory.Cardio)
             {
                 <td>
-                    <CustomInputNumber placeholder="@set.InitialDistance" style="width: 100%" Value="@set.Distance" TValue="int?" ValueChanged="(value) => DistanceChanged(set, value)" ValueExpression="() => set.Distance" />
+                    <CustomInputNumber placeholder="@set.InitialDistance" style="width: 100%" Value="@set.Distance" TValue="decimal?" ValueChanged="(value) => DistanceChanged(set, value)" ValueExpression="() => set.Distance" />
                 </td>
                 <td>
                     <CustomInputNumber placeholder="@set.InitialSeconds" style="width: 100%" Value="@set.Seconds" TValue="int?" ValueChanged="(value) => SecondsChanged(set, value)" ValueExpression="() => set.Seconds" />

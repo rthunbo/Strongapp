@@ -170,6 +170,7 @@ namespace Strongapp.API.Database
         {
             return new()
             {
+                new StrongExercise { ExerciseName = "Running", BodyPart = StrongExerciseBodyPart.Core, Category = StrongExerciseCategory.Cardio},
                 new StrongExercise { ExerciseName = "Arche Up Hold", BodyPart = StrongExerciseBodyPart.Back, Category = StrongExerciseCategory.Duration},
                 new StrongExercise { ExerciseName = "Arche Up Reps", BodyPart = StrongExerciseBodyPart.Back, Category = StrongExerciseCategory.RepsOnly},
                 new StrongExercise { ExerciseName = "Arnold Press (Dumbbell)", BodyPart = StrongExerciseBodyPart.Shoulders, Category = StrongExerciseCategory.Dumbbell },
