@@ -1,49 +1,31 @@
 ﻿@using Blazored.Modal
 @using Blazored.Modal.Services
-
-<div style="max-height: 600px; overflow-y: auto">
-    <Virtualize ItemsProvider="LoadExerciseHistory" Context="exerciseHistory">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">@exerciseHistory.WorkoutName</h5>
-                <p class="card-text">@exerciseHistory.Date.ToLongDateString()</p>
-                <ul style="padding-left: 0">
-                    <li style="display: block"><strong>Sets Performed</strong></li>
-                    @foreach (var set in exerciseHistory.Sets)
-                    {
-                        <li style="display: block">
-                            <span>@set.SetOrder</span>&nbsp; 
-                            <FormatSet Set="set" Category="ExerciseCategory" />
-                            @if (set.HasWeightPr)
-                            {
-                                <span>[WEIGHT]</span>
-                            }
-                            @if (set.HasDurationPr)
-                            {
-                                <span>[DURATION]</span>
-                            }
-                            @if (set.HasRepsPr)
-                            {
-                                <span>[REPS]</span>
-                            }
-                            @if (set.HasDistancePr)
-                            {
-                                <span>[DISTANCE]</span>
-                            }
-                            @if (set.HasVolumePr)
-                            {
-                                <span>[VOLUME]</span>
-                            }
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-        <br />
-    </Virtualize>
+@using Blazorise
+<div style="min-height: 700px">
+    <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
+        <Items>
+            <Tab Name="about">About</Tab>
+            <Tab Name="history">History</Tab>
+            <Tab Name="charts">Charts</Tab>
+            <Tab Name="records">Records</Tab>
+        </Items>
+        <Content>
+            <TabPanel Name="about">
+            </TabPanel>
+            <TabPanel Name="history">
+                <ExerciseHistory ExerciseName="@ExerciseName" ExerciseCategory="@ExerciseCategory" />
+            </TabPanel>
+            <TabPanel Name="charts">
+            </TabPanel>
+            <TabPanel Name="records">
+            </TabPanel>
+        </Content>
+    </Tabs> 
 </div>
 
 @code {
+
+    public string ActiveTab { get; set; }
 
     [Parameter]
     public string ExerciseName { get; set; }
@@ -54,9 +36,8 @@
     [Inject]
     public IExerciseService ExerciseService { get; set; } = default!;
 
-    public async ValueTask<ItemsProviderResult<StrongExerciseDataHistory>> LoadExerciseHistory(ItemsProviderRequest request)
+    private void OnSelectedTabChanged(string name)
     {
-        var result = await ExerciseService.GetHistory(ExerciseName, request.StartIndex, request.Count, request.CancellationToken);
-        return new ItemsProviderResult<StrongExerciseDataHistory>(result.Items, result.TotalItemCount);
+        ActiveTab = name;
     }
 }

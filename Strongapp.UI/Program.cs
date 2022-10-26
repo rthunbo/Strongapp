@@ -1,4 +1,7 @@
 using Blazored.Modal;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -12,6 +15,9 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazoredModal();
+builder.Services.AddBlazorise()
+  .AddBootstrapProviders()
+  .AddFontAwesomeIcons();
 
 builder.Services.AddHttpClient<IWorkoutService, WorkoutService>(client =>
     client.BaseAddress = new Uri("https://localhost:7199/"));

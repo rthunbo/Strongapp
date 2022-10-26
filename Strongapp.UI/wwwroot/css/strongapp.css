@@ -31,3 +31,8 @@ body {
     color: grey;
     font-weight: normal;
 }
+
+.badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
