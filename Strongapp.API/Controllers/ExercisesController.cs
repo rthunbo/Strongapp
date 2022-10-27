@@ -4,7 +4,7 @@ using Strongapp.API.Repositories;
 using Strongapp.Models;
 using System.Security.Cryptography.Xml;
 using Strongapp.API.Services;
-using static Strongapp.Models.StrongPersonalRecordsType;
+using static Strongapp.Models.StrongPersonalRecordType;
 using System.Collections.Generic;
 
 namespace Strongapp.API.Controllers

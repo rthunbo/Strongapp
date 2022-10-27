@@ -5,25 +5,25 @@
     {
         <ul style="padding-left: 0">
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.OneRM))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.OneRM))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.OneRM);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.OneRM);
                     <span class="float-end">@record.Weight kg</span>
                 }
                 <span><strong>1RM</strong></span>
             </li>
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.Weight))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.Weight))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.Weight);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.Weight);
                     <span class="float-end">@record.Weight kg (x @record.Reps)</span>
                 }
                 <span><strong>Weight</strong></span>
             </li>
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxVolume))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.MaxVolume))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxVolume);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.MaxVolume);
                     <span class="float-end">@record.Weight kg</span>
                 }
                 <span><strong>Max Volume</strong></span>
@@ -34,9 +34,9 @@
     {
         <ul style="padding-left: 0">
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxReps))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.MaxReps))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxReps);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.MaxReps);
                     <span class="float-end">@record.Reps reps</span>
                 }
                 <span><strong>Max Reps</strong></span>
@@ -47,9 +47,9 @@
     {
         <ul style="padding-left: 0">
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxReps))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.MaxReps))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxReps);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.MaxReps);
                     <span class="float-end">@record.Reps reps</span>
                 }
                 <span><strong>Max Reps</strong></span>
@@ -58,9 +58,9 @@
 
         <ul style="padding-left: 0">
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxWeightAdded))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.MaxWeightAdded))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxWeightAdded);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.MaxWeightAdded);
                     @if (record.Weight == 0)
                     {
                         <span class="float-end">@record.Reps reps</span>
@@ -76,9 +76,9 @@
 
         <ul style="padding-left: 0">
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxVolumeAdded))
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordType.MaxVolumeAdded))
                 {
-                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxVolumeAdded);
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordType.MaxVolumeAdded);
                     <span class="float-end">@record.Weight kg</span>
                 }
                 <span><strong>Max Reps</strong></span>

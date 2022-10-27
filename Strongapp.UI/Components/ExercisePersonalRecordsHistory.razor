@@ -5,7 +5,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-                .Where(x => x.Type == StrongPersonalRecordsType.Weight)
+                .Where(x => x.Type == StrongPersonalRecordType.Weight)
                 .OrderByDescending(x => x.Weight))
             {
                 <li style="display: block; padding: 0.25rem;">
@@ -19,7 +19,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-                .Where(x => x.Type == StrongPersonalRecordsType.OneRM)
+                .Where(x => x.Type == StrongPersonalRecordType.OneRM)
                 .OrderByDescending(x => x.Weight))
             {
                 <li style="display: block; padding: 0.25rem;">
@@ -33,7 +33,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-               .Where(x => x.Type == StrongPersonalRecordsType.MaxVolume)
+               .Where(x => x.Type == StrongPersonalRecordType.MaxVolume)
                .OrderByDescending(x => x.Weight))
             {
                 <li style="display: block; padding: 0.25rem;">
@@ -49,7 +49,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-                .Where(x => x.Type == StrongPersonalRecordsType.MaxReps)
+                .Where(x => x.Type == StrongPersonalRecordType.MaxReps)
                 .OrderByDescending(x => x.Reps))
             {
                 <li style="display: block; padding: 0.25rem;">
@@ -66,7 +66,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-           .Where(x => x.Type == StrongPersonalRecordsType.MaxReps)
+           .Where(x => x.Type == StrongPersonalRecordType.MaxReps)
            .OrderByDescending(x => x.Reps))
             {
                 <li style="display: block; padding: 0.25rem;">
@@ -80,7 +80,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-                .Where(x => x.Type == StrongPersonalRecordsType.MaxWeightAdded)
+                .Where(x => x.Type == StrongPersonalRecordType.MaxWeightAdded)
                 .OrderByDescending(x => x.Weight).ThenByDescending(x => x.Reps))
             {
                 <li style="display: block; padding: 0.25rem;">
@@ -103,7 +103,7 @@
 
         <ul style="padding-left: 0">
             @foreach (var personalRecord in PersonalRecordsHistory
-                .Where(x => x.Type == StrongPersonalRecordsType.MaxVolumeAdded)
+                .Where(x => x.Type == StrongPersonalRecordType.MaxVolumeAdded)
                 .OrderByDescending(x => x.Weight))
             {
                 <li style="display: block; padding: 0.25rem;">

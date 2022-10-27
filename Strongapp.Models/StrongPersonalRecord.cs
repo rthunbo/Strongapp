@@ -10,7 +10,7 @@ namespace Strongapp.Models
     {
         public DateTime? Date { get; set; }
 
-        public StrongPersonalRecordsType Type { get; set; }
+        public StrongPersonalRecordType Type { get; set; }
 
         public decimal? Weight { get; set; }
 

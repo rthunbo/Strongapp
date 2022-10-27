@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Strongapp.Models
 {
-    public enum StrongPersonalRecordsType
+    public enum StrongPersonalRecordType
     {
         // ReSharper disable once InconsistentNaming
         OneRM,
