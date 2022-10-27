@@ -4,15 +4,30 @@
         <h5>Personal records</h5>
 
         <ul style="padding-left: 0">
-            @if (PersonalRecords.OneRM != null)
-            {
-                <li style="display: block; padding: 0.25rem;"><span class="float-end">@PersonalRecords.OneRM.Weight kg</span><span><strong>1RM</strong></span></li>
-                <li style="display: block; padding: 0.25rem;"><span class="float-end">@PersonalRecords.Weight.Weight kg (x @PersonalRecords.Weight.Reps)</span><span><strong>Weight</strong></span></li>
-                <li style="display: block; padding: 0.25rem;"><span class="float-end">@PersonalRecords.MaxVolume.Weight kg</span><span><strong>Max Volume</strong></span></li>
-            }
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.OneRM != null)
+                {
+                    <span class="float-end">@PersonalRecords.OneRM.Weight kg</span>
+                }
+                <span><strong>1RM</strong></span>
+            </li>
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.Weight != null)
+                {
+                    <span class="float-end">@PersonalRecords.Weight.Weight kg (x @PersonalRecords.Weight.Reps)</span>
+                }
+                <span><strong>Weight</strong></span>
+            </li>
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.MaxVolume != null)
+                {
+                    <span class="float-end">@PersonalRecords.MaxVolume.Weight kg</span>
+                }
+                <span><strong>Max Volume</strong></span>
+            </li>
         </ul>
 
-        <button class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 20px;">View Records History</button>
+        <button class="btn btn-secondary btn-sm" @onclick="ViewRecordsHistory" style="width: 100%; margin-bottom: 20px;">View Records History</button>
 
         <table class="table table-sm">
             <thead>

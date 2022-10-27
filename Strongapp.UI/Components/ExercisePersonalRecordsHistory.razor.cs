@@ -4,7 +4,7 @@ using Strongapp.UI.Services;
 
 namespace Strongapp.UI.Components
 {
-    public partial class ExercisePersonalRecords
+    public partial class ExercisePersonalRecordsHistory
     {
         [Parameter]
         public string ExerciseName { get; set; }
@@ -12,22 +12,14 @@ namespace Strongapp.UI.Components
         [Parameter]
         public StrongExerciseCategory ExerciseCategory { get; set; }
 
-        [Parameter]
-        public EventCallback OnViewRecordsHistory { get; set; }
-
         [Inject]
         public IExerciseService ExerciseService { get; set; } = default!;
 
-        public StrongPersonalRecords PersonalRecords { get; set; }
+        public StrongPersonalRecordsHistory PersonalRecordsHistory { get; set; }
 
         protected override async Task OnInitializedAsync()
-        { 
-            PersonalRecords = await ExerciseService.GetPersonalRecords(ExerciseName);
-        }
-
-        public async Task ViewRecordsHistory()
         {
-            await OnViewRecordsHistory.InvokeAsync();
+            PersonalRecordsHistory = await ExerciseService.GetPersonalRecordsHistory(ExerciseName);
         }
     }
 }

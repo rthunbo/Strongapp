@@ -1,0 +1,48 @@
+﻿<div style="max-height: 600px; overflow-y: auto; margin: 20px">
+    @if (ExerciseCategory is StrongExerciseCategory.Dumbbell or StrongExerciseCategory.Barbell or StrongExerciseCategory.MachineOther)
+    {
+        <h5>Weight</h5>
+
+        @if (PersonalRecordsHistory.Weight != null)
+        {
+            <ul style="padding-left: 0">
+                @foreach (var personalRecord in PersonalRecordsHistory.Weight)
+                {
+                    <li style="display: block; padding: 0.25rem;">
+                        <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                        <span><strong>@personalRecord.Weight kg (x @personalRecord.Reps)</strong></span>
+                    </li>
+                }
+            </ul>
+        }
+
+        <h5>1RM</h5>
+
+        @if (PersonalRecordsHistory.OneRM != null)
+        {
+            <ul style="padding-left: 0">
+                @foreach (var personalRecord in PersonalRecordsHistory.OneRM)
+                {
+                    <li style="display: block; padding: 0.25rem;">
+                        <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                        <span><strong>@personalRecord.Weight kg</strong></span>
+                    </li>
+                }
+            </ul>
+        }
+        <h5>Max Volume</h5>
+
+        @if (PersonalRecordsHistory.MaxVolume != null)
+        {
+            <ul style="padding-left: 0">
+                @foreach (var personalRecord in PersonalRecordsHistory.MaxVolume)
+                {
+                    <li style="display: block; padding: 0.25rem;">
+                        <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                        <span><strong>@personalRecord.Weight kg</strong></span>
+                    </li>
+                }
+            </ul>
+        }
+    }
+</div>

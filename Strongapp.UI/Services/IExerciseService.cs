@@ -9,5 +9,7 @@ namespace Strongapp.UI.Services
         Task<List<StrongExerciseWithMetadata>> GetExercises();
 
         Task<StrongPersonalRecords> GetPersonalRecords(string name);
+
+        Task<StrongPersonalRecordsHistory> GetPersonalRecordsHistory(string name);
     }
 }

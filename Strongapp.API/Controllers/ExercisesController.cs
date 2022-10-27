@@ -40,14 +40,17 @@ namespace Strongapp.API.Controllers
                 var oneRMPr = performances
                     .Where(x => x.Set.HasOneRMPr)
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = Convert.ToInt32(x.Set.OneRM) })
+                    .OrderByDescending(x => x.Weight)
                     .ToList();
                 var weightPr = performances
                     .Where(x => x.Set.HasWeightPr)
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = x.Set.Weight, Reps = x.Set.Reps })
+                    .OrderByDescending(x => x.Weight)
                     .ToList();
                 var maxVolumePr = performances
                     .Where(x => x.Set.HasVolumePr)
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = x.Set.Volume })
+                    .OrderByDescending(x => x.Weight)
                     .ToList();
 
                 return new StrongPersonalRecordsHistory

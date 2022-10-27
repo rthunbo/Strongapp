@@ -32,5 +32,11 @@ namespace Strongapp.UI.Services
             var personalRecords = await http.GetFromJsonAsync<StrongPersonalRecords>($"exercises/records?name={name}");
             return personalRecords;
         }
+
+        public async Task<StrongPersonalRecordsHistory> GetPersonalRecordsHistory(string name)
+        {
+            var personalRecordsHistory = await http.GetFromJsonAsync<StrongPersonalRecordsHistory>($"exercises/recordsHistory?name={name}");
+            return personalRecordsHistory;
+        }
     }
 }

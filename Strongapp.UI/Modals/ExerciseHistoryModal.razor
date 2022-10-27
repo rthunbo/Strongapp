@@ -2,31 +2,41 @@
 @using Blazored.Modal.Services
 @using Blazorise
 <div style="min-height: 700px">
-    <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
-        <Items>
-            <Tab Name="about">About</Tab>
-            <Tab Name="history">History</Tab>
-            <Tab Name="charts">Charts</Tab>
-            <Tab Name="records">Records</Tab>
-        </Items>
-        <Content>
-            <TabPanel Name="about">
-            </TabPanel>
-            <TabPanel Name="history">
-                <ExerciseHistory ExerciseName="@ExerciseName" ExerciseCategory="@ExerciseCategory" />
-            </TabPanel>
-            <TabPanel Name="charts">
-            </TabPanel>
-            <TabPanel Name="records">
-                <ExercisePersonalRecords ExerciseName="@ExerciseName" ExerciseCategory="@ExerciseCategory" />
-            </TabPanel>
-        </Content>
-    </Tabs> 
+    @if (!ShowRecordsHistory)
+    {
+        <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
+            <Items>
+                <Tab Name="about">About</Tab>
+                <Tab Name="history">History</Tab>
+                <Tab Name="charts">Charts</Tab>
+                <Tab Name="records">Records</Tab>
+            </Items>
+            <Content>
+                <TabPanel Name="about">
+                </TabPanel>
+                <TabPanel Name="history">
+                    <ExerciseHistory ExerciseName="@ExerciseName" ExerciseCategory="@ExerciseCategory"/>
+                </TabPanel>
+                <TabPanel Name="charts">
+                </TabPanel>
+                <TabPanel Name="records">
+                    <ExercisePersonalRecords ExerciseName="@ExerciseName" ExerciseCategory="@ExerciseCategory" OnViewRecordsHistory="ViewRecordsHistory"/>
+                </TabPanel>
+            </Content>
+        </Tabs>
+    }
+    @if (ShowRecordsHistory)
+    {
+        <ExercisePersonalRecordsHistory ExerciseName="@ExerciseName" ExerciseCategory="@ExerciseCategory"/>
+        <button class="btn btn-secondary" @onclick="Back">Back</button>
+    }
 </div>
 
 @code {
 
     public string ActiveTab { get; set; }
+
+    public bool ShowRecordsHistory { get; set; }
 
     [Parameter]
     public string ExerciseName { get; set; }
@@ -34,11 +44,25 @@
     [Parameter]
     public StrongExerciseCategory ExerciseCategory { get; set; }
 
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
     [Inject]
     public IExerciseService ExerciseService { get; set; } = default!;
 
     private void OnSelectedTabChanged(string name)
     {
         ActiveTab = name;
+    }
+
+    public void ViewRecordsHistory()
+    {
+        BlazoredModal.SetTitle("Records History");
+        ShowRecordsHistory = true;
+    }
+
+    public void Back()
+    {
+        BlazoredModal.SetTitle(ExerciseName);
+        ShowRecordsHistory = false;
     }
 }
