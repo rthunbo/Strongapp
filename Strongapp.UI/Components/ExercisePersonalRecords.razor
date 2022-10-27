@@ -1,34 +1,40 @@
 ﻿<div style="max-height: 600px; overflow-y: auto; margin: 20px">
+    <h5>Personal records</h5>
+
     @if (ExerciseCategory is StrongExerciseCategory.Dumbbell or StrongExerciseCategory.Barbell or StrongExerciseCategory.MachineOther)
     {
-        <h5>Personal records</h5>
-
         <ul style="padding-left: 0">
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.OneRM != null)
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.OneRM))
                 {
-                    <span class="float-end">@PersonalRecords.OneRM.Weight kg</span>
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.OneRM);
+                    <span class="float-end">@record.Weight kg</span>
                 }
                 <span><strong>1RM</strong></span>
             </li>
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.Weight != null)
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.Weight))
                 {
-                    <span class="float-end">@PersonalRecords.Weight.Weight kg (x @PersonalRecords.Weight.Reps)</span>
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.Weight);
+                    <span class="float-end">@record.Weight kg (x @record.Reps)</span>
                 }
                 <span><strong>Weight</strong></span>
             </li>
             <li style="display: block; padding: 0.25rem;">
-                @if (PersonalRecords.MaxVolume != null)
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxVolume))
                 {
-                    <span class="float-end">@PersonalRecords.MaxVolume.Weight kg</span>
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxVolume);
+                    <span class="float-end">@record.Weight kg</span>
                 }
                 <span><strong>Max Volume</strong></span>
             </li>
         </ul>
-
-        <button class="btn btn-secondary btn-sm" @onclick="ViewRecordsHistory" style="width: 100%; margin-bottom: 20px;">View Records History</button>
-
+    }
+    
+    <button class="btn btn-secondary btn-sm" @onclick="ViewRecordsHistory" style="width: 100%; margin-bottom: 20px;">View Records History</button>
+        
+    @if (ExerciseCategory is StrongExerciseCategory.Dumbbell or StrongExerciseCategory.Barbell or StrongExerciseCategory.MachineOther)
+    {
         <table class="table table-sm">
             <thead>
             <tr>
@@ -38,7 +44,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var predictedPerformance in PersonalRecords.PredictedPerformances)
+            @foreach (var predictedPerformance in PredictedPerformances)
             {
                 <tr>
                     <td>@predictedPerformance.Reps</td>

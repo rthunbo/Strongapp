@@ -27,16 +27,22 @@ namespace Strongapp.UI.Services
             return exercises;
         }
 
-        public async Task<StrongPersonalRecords> GetPersonalRecords(string name)
+        public async Task<List<StrongPersonalRecord>> GetPersonalRecords(string name)
         {
-            var personalRecords = await http.GetFromJsonAsync<StrongPersonalRecords>($"exercises/records?name={name}");
+            var personalRecords = await http.GetFromJsonAsync<List<StrongPersonalRecord>>($"exercises/records?name={name}");
             return personalRecords;
         }
 
-        public async Task<StrongPersonalRecordsHistory> GetPersonalRecordsHistory(string name)
+        public async Task<List<StrongPersonalRecord>> GetPersonalRecordsHistory(string name)
         {
-            var personalRecordsHistory = await http.GetFromJsonAsync<StrongPersonalRecordsHistory>($"exercises/recordsHistory?name={name}");
+            var personalRecordsHistory = await http.GetFromJsonAsync<List<StrongPersonalRecord>>($"exercises/recordsHistory?name={name}");
             return personalRecordsHistory;
+        }
+
+        public async Task<List<StrongPredictedPerformance>> GetPredictedPerformances(string name)
+        {
+            var predictedPerformances = await http.GetFromJsonAsync<List<StrongPredictedPerformance>>($"exercises/predictedPerformances?name={name}");
+            return predictedPerformances;
         }
     }
 }

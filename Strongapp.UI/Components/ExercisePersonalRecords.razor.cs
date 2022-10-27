@@ -18,11 +18,14 @@ namespace Strongapp.UI.Components
         [Inject]
         public IExerciseService ExerciseService { get; set; } = default!;
 
-        public StrongPersonalRecords PersonalRecords { get; set; }
+        public List<StrongPersonalRecord> PersonalRecords { get; set; }
+
+        public List<StrongPredictedPerformance> PredictedPerformances { get; set; }
 
         protected override async Task OnInitializedAsync()
         { 
             PersonalRecords = await ExerciseService.GetPersonalRecords(ExerciseName);
+            PredictedPerformances = await ExerciseService.GetPredictedPerformances(ExerciseName);
         }
 
         public async Task ViewRecordsHistory()

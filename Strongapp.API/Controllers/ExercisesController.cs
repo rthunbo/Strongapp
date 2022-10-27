@@ -4,6 +4,8 @@ using Strongapp.API.Repositories;
 using Strongapp.Models;
 using System.Security.Cryptography.Xml;
 using Strongapp.API.Services;
+using static Strongapp.Models.StrongPersonalRecordsType;
+using System.Collections.Generic;
 
 namespace Strongapp.API.Controllers
 {
@@ -25,47 +27,40 @@ namespace Strongapp.API.Controllers
         }
 
         [HttpGet("recordsHistory")]
-        public async Task<StrongPersonalRecordsHistory> GetPersonalRecordsHistory([FromQuery] string name)
+        public async Task<List<StrongPersonalRecord>> GetPersonalRecordsHistory([FromQuery] string name)
         {
             var exercises = await _exerciseRepository.GetAsync();
             var exercise = exercises.First(x => x.ExerciseName == name);
 
             var workouts = await _workoutRepository.GetAsync();
-
             var performances = GetPerformances(name, workouts).ToList();
+
+            var personalRecords = new List<StrongPersonalRecord>();
 
             if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
             {
                 // ReSharper disable once InconsistentNaming
                 var oneRMPr = performances
                     .Where(x => x.Set.HasOneRMPr)
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = Convert.ToInt32(x.Set.OneRM) })
-                    .OrderByDescending(x => x.Weight)
-                    .ToList();
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, Weight = Convert.ToInt32(x.Set.OneRM) });
+                personalRecords.AddRange(oneRMPr);
+                
                 var weightPr = performances
                     .Where(x => x.Set.HasWeightPr)
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = x.Set.Weight, Reps = x.Set.Reps })
-                    .OrderByDescending(x => x.Weight)
-                    .ToList();
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = Weight, Weight = x.Set.Weight, Reps = x.Set.Reps });
+                personalRecords.AddRange(weightPr);
+                
                 var maxVolumePr = performances
                     .Where(x => x.Set.HasVolumePr)
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = x.Set.Volume })
-                    .OrderByDescending(x => x.Weight)
-                    .ToList();
-
-                return new StrongPersonalRecordsHistory
-                {
-                    OneRM = oneRMPr,
-                    Weight = weightPr,
-                    MaxVolume = maxVolumePr
-                };
-
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume });
+                personalRecords.AddRange(maxVolumePr);
             }
-            return null;
+
+            return personalRecords.OrderBy(x => x.Date).ToList();
         }
 
         [HttpGet("records")]
-        public async Task<StrongPersonalRecords> GetPersonalRecords([FromQuery] string name)
+        public async Task<List<StrongPersonalRecord>> GetPersonalRecords([FromQuery] string name)
         {
             var exercises = await _exerciseRepository.GetAsync();
             var exercise = exercises.First(x => x.ExerciseName == name);
@@ -74,35 +69,61 @@ namespace Strongapp.API.Controllers
 
             var performances = GetPerformances(name, workouts).ToList();
 
+            var personalRecords = new List<StrongPersonalRecord>();
+
             if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
             {
                 // ReSharper disable once InconsistentNaming
                 var oneRMPr = performances
                     .Where(x => x.Set.HasOneRMPr)
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = Convert.ToInt32(x.Set.OneRM) })
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, Weight = Convert.ToInt32(x.Set.OneRM) })
                     .LastOrDefault();
+                if (oneRMPr != null)
+                {
+                    personalRecords.Add(oneRMPr);
+                }
+
                 var weightPr = performances
                     .Where(x => x.Set.HasWeightPr)
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = x.Set.Weight, Reps = x.Set.Reps })
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = Weight, Weight = x.Set.Weight, Reps = x.Set.Reps })
                     .LastOrDefault();
+                if (weightPr != null)
+                {
+                    personalRecords.Add(weightPr);
+                }
+
                 var maxVolumePr = performances
                     .Where(x => x.Set.HasVolumePr)
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Weight = x.Set.Volume })
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume })
                     .LastOrDefault();
-
-                var bestPerformances = GetBestPerformances(performances);
-                var predictedPerformances = GetPredictedPerformances(bestPerformances, oneRMPr?.Weight);
-
-                return new StrongPersonalRecords
+                if (maxVolumePr != null)
                 {
-                    OneRM = oneRMPr,
-                    Weight = weightPr,
-                    MaxVolume = maxVolumePr,
-                    PredictedPerformances = predictedPerformances
-                };
+                    personalRecords.Add(maxVolumePr);
+                }
             }
 
-            return null;
+            return personalRecords;
+        }
+
+        [HttpGet("predictedPerformances")]
+        public async Task<List<StrongPredictedPerformance>> GetPredictedPerformances([FromQuery] string name)
+        {
+            var exercises = await _exerciseRepository.GetAsync();
+            var exercise = exercises.First(x => x.ExerciseName == name);
+
+            var workouts = await _workoutRepository.GetAsync();
+
+            var performances = GetPerformances(name, workouts).ToList();
+
+            var predictedPerformances = new List<StrongPredictedPerformance>();
+
+            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
+            {
+                var bestPerformances = GetBestPerformances(performances);
+                predictedPerformances.AddRange(GetPredictedPerformances(bestPerformances));
+            }
+
+            return predictedPerformances;
         }
 
         private IEnumerable<StrongPerformance> GetPerformances(string name, List<StrongWorkout> workouts)
@@ -145,8 +166,10 @@ namespace Strongapp.API.Controllers
             return results;
         }
 
-        private List<StrongPredictedPerformance> GetPredictedPerformances(List<StrongBestPerformance> bestPerformances, decimal? oneRM)
+        private List<StrongPredictedPerformance> GetPredictedPerformances(List<StrongBestPerformance> bestPerformances)
         {
+            var oneRM = bestPerformances.Max(x => _oneRmWeightCalculator.CalculatePredictedOneRMWeight(x.Weight.Value, x.Reps.Value));
+
             var results = new List<StrongPredictedPerformance>();
             for (var reps = 1; reps <= 10; reps++)
             {
