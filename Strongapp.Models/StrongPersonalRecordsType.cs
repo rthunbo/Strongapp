@@ -14,6 +14,9 @@ namespace Strongapp.Models
         MaxVolume,
         MaxReps,
         MaxWeightAdded,
-        MaxVolumeAdded
+        MaxVolumeAdded,
+        BestPace,
+        MaxDistance,
+        MaxDuration
     }
 }
