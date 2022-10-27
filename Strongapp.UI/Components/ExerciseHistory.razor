@@ -11,27 +11,27 @@
                         <li style="display: block">
                             <span>@set.SetOrder</span>&nbsp;
                             <FormatSet Set="set" Category="ExerciseCategory" />
-                            @if (set.HasWeightPr)
+                            @if (set.PersonalRecords.Contains(StrongPersonalRecordType.Weight) || set.PersonalRecords.Contains(StrongPersonalRecordType.MaxWeightAdded))
                             {
                                 <span>&nbsp;</span>
                                 <span class="badge badge-success">WEIGHT</span>
                             }
-                            @if (set.HasDurationPr)
+                            @if (set.PersonalRecords.Contains(StrongPersonalRecordType.MaxDuration))
                             {
                                 <span>&nbsp;</span>
                                 <span class="badge badge-success">DURATION</span>
                             }
-                            @if (set.HasRepsPr)
+                            @if (set.PersonalRecords.Contains(StrongPersonalRecordType.MaxReps))
                             {
                                 <span>&nbsp;</span>
                                 <span class="badge badge-success">REPS</span>
                             }
-                            @if (set.HasDistancePr)
+                            @if (set.PersonalRecords.Contains(StrongPersonalRecordType.MaxDistance))
                             {
                                 <span>&nbsp;</span>
                                 <span class="badge badge-success">DISTANCE</span>
                             }
-                            @if (set.HasVolumePr)
+                            @if (set.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolume) || set.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolumeAdded))
                             {
                                 <span>&nbsp;</span>
                                 <span class="badge badge-success">VOLUME</span>

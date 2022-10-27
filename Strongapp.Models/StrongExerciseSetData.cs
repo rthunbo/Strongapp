@@ -36,29 +36,11 @@ namespace Strongapp.Models
         // ReSharper disable once InconsistentNaming
         public decimal? OneRM { get; set; }
 
-        public bool HasWeightPr { get; set; }
-
-        public bool HasRepsPr { get; set; }
-
-        public bool HasDurationPr { get; set; }
-
-        public bool HasDistancePr { get; set; }
-
-        public bool HasVolumePr { get; set; }
-
-        public bool HasOneRMPr { get; set; }
-
+        public List<StrongPersonalRecordType> PersonalRecords = new();
 
         public int GetNumberOfPrs()
         {
-            int numPrs = 0;
-            if (HasDurationPr) numPrs++;
-            if (HasRepsPr) numPrs++;
-            if (HasDistancePr) numPrs++;
-            if (HasVolumePr) numPrs++;
-            if (HasWeightPr) numPrs++;
-            if (HasOneRMPr) numPrs++;
-            return numPrs;
+            return PersonalRecords.Count;
         }
     }
 }

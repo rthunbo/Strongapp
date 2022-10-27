@@ -3,6 +3,7 @@ using Strongapp.API.Repositories;
 using Strongapp.Models;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
+using static Strongapp.Models.StrongExerciseCategory;
 
 namespace Strongapp.API.Services
 {
@@ -67,76 +68,127 @@ namespace Strongapp.API.Services
         {
             var sets = exerciseHistory.SelectMany(x => x.Sets).ToList();
 
-            var weightPr = sets.LastOrDefault(x => x.HasWeightPr);
-            var repsPr = sets.LastOrDefault(x => x.HasRepsPr);
-            var durationPr = sets.LastOrDefault(x => x.HasDurationPr);
-            var distancePr = sets.LastOrDefault(x => x.HasDistancePr);
-            var volumePr = sets.LastOrDefault(x => x.HasVolumePr);
-            // ReSharper disable once InconsistentNaming
-            var oneRMPr = sets.LastOrDefault(x => x.HasOneRMPr);
-
-            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight)
+            foreach (var set in exercise.Sets)
             {
+                set.PersonalRecords.Clear();
+            }
+
+            // Weight
+            if (exercise.Category is MachineOther or Barbell or Dumbbell)
+            {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.Weight));
                 var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
                 if (maxWeightSet != null)
                 {
-                    maxWeightSet.HasWeightPr = weightPr == null || maxWeightSet.Weight > weightPr.Weight || (maxWeightSet.Weight == weightPr.Weight && maxWeightSet.Reps > weightPr.Reps);
+                    if (personalRecord == null || maxWeightSet.Weight > personalRecord.Weight || (maxWeightSet.Weight == personalRecord.Weight && maxWeightSet.Reps > personalRecord.Reps))
+                    {
+                        maxWeightSet.PersonalRecords.Add(StrongPersonalRecordType.Weight);
+                    }
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.WeightedBodyweight or StrongExerciseCategory.AssistedBodyweight)
+            // MaxWeightAdded
+            if (exercise.Category is WeightedBodyweight)
             {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxWeightAdded));
+                var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
+                if (maxWeightSet != null)
+                {
+                    if (personalRecord == null || maxWeightSet.Weight > personalRecord.Weight || (maxWeightSet.Weight == personalRecord.Weight && maxWeightSet.Reps > personalRecord.Reps))
+                    {
+                        maxWeightSet.PersonalRecords.Add(StrongPersonalRecordType.MaxWeightAdded);
+                    }
+                }
+            }
+
+            // MaxReps
+            if (exercise.Category is RepsOnly or WeightedBodyweight or AssistedBodyweight)
+            {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxReps));
                 var maxRepsSet = exercise.Sets.MaxBy(x => x.Reps);
                 if (maxRepsSet != null)
                 {
-                    maxRepsSet.HasRepsPr = repsPr == null || maxRepsSet.Reps > repsPr.Reps;
+                    if (personalRecord == null || maxRepsSet.Reps > personalRecord.Reps)
+                    {
+                        maxRepsSet.PersonalRecords.Add(StrongPersonalRecordType.MaxReps);
+                    }
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.Duration or StrongExerciseCategory.Cardio)
+            // MaxDuration
+            if (exercise.Category is Duration or Cardio)
             {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxDuration));
                 var maxDurationSet = exercise.Sets.MaxBy(x => x.Seconds);
                 if (maxDurationSet != null)
                 {
-                    maxDurationSet.HasDurationPr = durationPr == null || maxDurationSet.Seconds > durationPr.Seconds;
+                    if (personalRecord == null || maxDurationSet.Seconds > personalRecord.Seconds)
+                    {
+                        maxDurationSet.PersonalRecords.Add(StrongPersonalRecordType.MaxDuration);
+                    }
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.Cardio)
+            // MaxDistance
+            if (exercise.Category is Cardio)
             {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxDistance));
                 var maxDistanceSet = exercise.Sets.MaxBy(x => x.Distance);
                 if (maxDistanceSet != null)
                 {
-                    maxDistanceSet.HasDistancePr = distancePr == null || maxDistanceSet.Distance > distancePr.Distance;
+                    if (personalRecord == null || maxDistanceSet.Distance > personalRecord.Distance)
+                    {
+                        maxDistanceSet.PersonalRecords.Add(StrongPersonalRecordType.MaxDistance);
+                    }
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
+            // MaxVolume
+            if (exercise.Category is MachineOther or Barbell or Dumbbell)
             {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolume));
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.Volume);
                 if (maxVolumeSet != null)
                 {
-                    maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.Volume > volumePr.Volume;
+                    if (personalRecord == null || maxVolumeSet.Volume > personalRecord.Volume)
+                    {
+                        maxVolumeSet.PersonalRecords.Add(StrongPersonalRecordType.MaxVolume);
+                    }
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.WeightedBodyweight)
+            // MaxVolumeAdded
+            if (exercise.Category is WeightedBodyweight)
             {
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolumeAdded));
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.AddedVolume);
                 if (maxVolumeSet != null)
                 {
-                    maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.AddedVolume > volumePr.AddedVolume;
+                    if (personalRecord == null || maxVolumeSet.AddedVolume > personalRecord.AddedVolume)
+                    {
+                        maxVolumeSet.PersonalRecords.Add(StrongPersonalRecordType.MaxVolumeAdded);
+                    }
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
+            // OneRM
+            if (exercise.Category is MachineOther or Barbell or Dumbbell)
             {
-                // ReSharper disable once InconsistentNaming
+                var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.OneRM));
                 var maxOneRMSet = exercise.Sets.MaxBy(x => x.OneRM);
                 if (maxOneRMSet != null)
                 {
-                    maxOneRMSet.HasOneRMPr = oneRMPr == null || maxOneRMSet.OneRM > oneRMPr.OneRM;
+                    if (personalRecord == null || maxOneRMSet.OneRM > personalRecord.OneRM)
+                    {
+                        maxOneRMSet.PersonalRecords.Add(StrongPersonalRecordType.OneRM);
+                    }
                 }
+            }
+
+            // BestPace
+            if (exercise.Category is Cardio)
+            {
+                // TODO 
             }
         }
 

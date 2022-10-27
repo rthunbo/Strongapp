@@ -39,19 +39,18 @@ namespace Strongapp.API.Controllers
 
             if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
             {
-                // ReSharper disable once InconsistentNaming
                 var oneRMPr = performances
-                    .Where(x => x.Set.HasOneRMPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(OneRM))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, Weight = Convert.ToInt32(x.Set.OneRM) });
                 personalRecords.AddRange(oneRMPr);
                 
                 var weightPr = performances
-                    .Where(x => x.Set.HasWeightPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(Weight))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = Weight, Weight = x.Set.Weight, Reps = x.Set.Reps });
                 personalRecords.AddRange(weightPr);
                 
                 var maxVolumePr = performances
-                    .Where(x => x.Set.HasVolumePr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxVolume))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume });
                 personalRecords.AddRange(maxVolumePr);
             }
@@ -59,7 +58,7 @@ namespace Strongapp.API.Controllers
             if (exercise.Category is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.AssistedBodyweight)
             {
                 var maxRepsPr = performances
-                    .Where(x => x.Set.HasRepsPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxReps))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps });
                 personalRecords.AddRange(maxRepsPr);
             }
@@ -67,17 +66,17 @@ namespace Strongapp.API.Controllers
             if (exercise.Category is StrongExerciseCategory.WeightedBodyweight)
             {
                 var maxRepsPr = performances
-                    .Where(x => x.Set.HasRepsPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxReps))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps });
                 personalRecords.AddRange(maxRepsPr);
 
                 var maxWeightPr = performances
-                    .Where(x => x.Set.HasWeightPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxWeightAdded))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxWeightAdded, Weight = x.Set.Weight, Reps = x.Set.Reps });
                 personalRecords.AddRange(maxWeightPr);
 
                 var maxVolumePr = performances
-                    .Where(x => x.Set.HasVolumePr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxVolumeAdded))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.AddedVolume });
                 personalRecords.AddRange(maxVolumePr);
             }
@@ -101,7 +100,7 @@ namespace Strongapp.API.Controllers
             {
                 // ReSharper disable once InconsistentNaming
                 var oneRMPr = performances
-                    .Where(x => x.Set.HasOneRMPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(OneRM))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, Weight = Convert.ToInt32(x.Set.OneRM) })
                     .LastOrDefault();
                 if (oneRMPr != null)
@@ -110,7 +109,7 @@ namespace Strongapp.API.Controllers
                 }
 
                 var weightPr = performances
-                    .Where(x => x.Set.HasWeightPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(Weight))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = Weight, Weight = x.Set.Weight, Reps = x.Set.Reps })
                     .LastOrDefault();
                 if (weightPr != null)
@@ -119,7 +118,7 @@ namespace Strongapp.API.Controllers
                 }
 
                 var maxVolumePr = performances
-                    .Where(x => x.Set.HasVolumePr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxVolume))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume })
                     .LastOrDefault();
                 if (maxVolumePr != null)
@@ -131,7 +130,7 @@ namespace Strongapp.API.Controllers
             if (exercise.Category is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.AssistedBodyweight)
             {
                 var maxRepsPr = performances
-                    .Where(x => x.Set.HasRepsPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxReps))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps })
                     .LastOrDefault();
 
@@ -144,7 +143,7 @@ namespace Strongapp.API.Controllers
             if (exercise.Category is StrongExerciseCategory.WeightedBodyweight)
             {
                 var maxRepsPr = performances
-                    .Where(x => x.Set.HasRepsPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxReps))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps })
                     .LastOrDefault();
 
@@ -154,7 +153,7 @@ namespace Strongapp.API.Controllers
                 }
 
                 var maxWeightPr = performances
-                    .Where(x => x.Set.HasWeightPr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxWeightAdded))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxWeightAdded, Weight = x.Set.Weight, Reps = x.Set.Reps })
                     .LastOrDefault();
 
@@ -164,7 +163,7 @@ namespace Strongapp.API.Controllers
                 }
 
                 var maxVolumePr = performances
-                    .Where(x => x.Set.HasVolumePr)
+                    .Where(x => x.Set.PersonalRecords.Contains(MaxVolumeAdded))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.AddedVolume })
                     .LastOrDefault();
 
