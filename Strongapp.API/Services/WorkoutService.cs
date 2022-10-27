@@ -18,33 +18,6 @@ namespace Strongapp.API.Services
             _oneRmWeightCalculator = oneRmWeightCalculator;
         }
 
-        public async Task UpdateVolume(StrongWorkout workout)
-        {
-            var bodyweight = await GetBodyweight(workout.Date);
-            foreach (var exercise in workout.ExerciseData)
-            {
-                foreach (var set in exercise.Sets)
-                {
-                    set.Volume = ComputeVolume(exercise.Category, bodyweight, set);
-                    if (exercise.Category == StrongExerciseCategory.WeightedBodyweight)
-                    {
-                        set.AddedVolume = set.Reps * set.Weight;
-                    }
-                }
-            }
-        }
-
-        public async Task UpdateOneRM(StrongWorkout workout)
-        {
-            foreach (var exercise in workout.ExerciseData)
-            {
-                foreach (var set in exercise.Sets)
-                {
-                    set.OneRM = ComputeOneRM(exercise.Category, set);
-                }
-            }
-        }
-
         public void UpdatePersonalRecords(List<StrongWorkout> workouts)
         {
             foreach (var workout in workouts)
@@ -64,7 +37,7 @@ namespace Strongapp.API.Services
             }
         }
 
-        private static void UpdatePersonalRecords(StrongExerciseData exercise, IEnumerable<StrongExerciseData> exerciseHistory)
+        private void UpdatePersonalRecords(StrongExerciseData exercise, IEnumerable<StrongExerciseData> exerciseHistory)
         {
             var sets = exerciseHistory.SelectMany(x => x.Sets).ToList();
 
@@ -147,10 +120,10 @@ namespace Strongapp.API.Services
             if (exercise.Category is MachineOther or Barbell or Dumbbell)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolume));
-                var maxVolumeSet = exercise.Sets.MaxBy(x => x.Volume);
+                var maxVolumeSet = exercise.Sets.MaxBy(x => x.Weight * x.Reps);
                 if (maxVolumeSet != null)
                 {
-                    if (personalRecord == null || maxVolumeSet.Volume > personalRecord.Volume)
+                    if (personalRecord == null || maxVolumeSet.Weight * maxVolumeSet.Reps > personalRecord.Weight * personalRecord.Weight)
                     {
                         maxVolumeSet.PersonalRecords.Add(StrongPersonalRecordType.MaxVolume);
                     }
@@ -161,10 +134,10 @@ namespace Strongapp.API.Services
             if (exercise.Category is WeightedBodyweight)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolumeAdded));
-                var maxVolumeSet = exercise.Sets.MaxBy(x => x.AddedVolume);
+                var maxVolumeSet = exercise.Sets.MaxBy(x => x.Weight * x.Reps);
                 if (maxVolumeSet != null)
                 {
-                    if (personalRecord == null || maxVolumeSet.AddedVolume > personalRecord.AddedVolume)
+                    if (personalRecord == null || maxVolumeSet.Weight * maxVolumeSet.Reps > personalRecord.Weight * personalRecord.Weight)
                     {
                         maxVolumeSet.PersonalRecords.Add(StrongPersonalRecordType.MaxVolumeAdded);
                     }
@@ -175,10 +148,12 @@ namespace Strongapp.API.Services
             if (exercise.Category is MachineOther or Barbell or Dumbbell)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.OneRM));
-                var maxOneRMSet = exercise.Sets.MaxBy(x => x.OneRM);
+                var maxOneRMSet = exercise.Sets.MaxBy(x => _oneRmWeightCalculator.CalculatePredictedOneRMWeight(x.Weight.Value, x.Reps.Value));
                 if (maxOneRMSet != null)
                 {
-                    if (personalRecord == null || maxOneRMSet.OneRM > personalRecord.OneRM)
+                    if (personalRecord == null
+                        || _oneRmWeightCalculator.CalculatePredictedOneRMWeight(maxOneRMSet.Weight.Value, maxOneRMSet.Reps.Value) 
+                        > _oneRmWeightCalculator.CalculatePredictedOneRMWeight(personalRecord.Weight.Value, personalRecord.Reps.Value))
                     {
                         maxOneRMSet.PersonalRecords.Add(StrongPersonalRecordType.OneRM);
                     }
@@ -190,52 +165,6 @@ namespace Strongapp.API.Services
             {
                 // TODO 
             }
-        }
-
-        private async Task<decimal> GetBodyweight(DateTime date)
-        {
-            var measurements = await _repository.GetAsync();
-            var measurement =
-                measurements
-                    .Where(x => x.Name == "Weight")
-                    .OrderBy(x => x.Date)
-                    .Where(x => x.Date < date)
-                    .LastOrDefault();
-
-            decimal weight = 75;
-            if (measurement != null)
-            {
-                weight = measurement.Value;
-            }
-
-            return weight;
-        }
-
-        public decimal? ComputeVolume(StrongExerciseCategory category, decimal bodyweight, StrongExerciseSetData set)
-        {
-            return category switch
-            {
-                StrongExerciseCategory.Barbell => set.Weight * set.Reps,
-                StrongExerciseCategory.MachineOther => set.Weight * set.Reps,
-                StrongExerciseCategory.Dumbbell => 2 * set.Weight * set.Reps,
-                StrongExerciseCategory.WeightedBodyweight => (bodyweight + set.Weight) * set.Reps,
-                StrongExerciseCategory.AssistedBodyweight => (bodyweight - set.Weight) * set.Reps,
-                StrongExerciseCategory.RepsOnly => 0,
-                StrongExerciseCategory.Cardio => 0,
-                StrongExerciseCategory.Duration => 0,
-                _ => 0
-            };
-        }
-
-        public decimal? ComputeOneRM(StrongExerciseCategory category, StrongExerciseSetData set)
-        {
-            if (category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell
-                or StrongExerciseCategory.MachineOther)
-            {
-                return _oneRmWeightCalculator.CalculatePredictedOneRMWeight(set.Weight.Value, set.Reps.Value);
-            }
-
-            return null;
         }
     }
 }

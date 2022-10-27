@@ -29,18 +29,6 @@ namespace Strongapp.Models
 
         public bool IsComplete { get; set; }
 
-        public decimal? AddedVolume { get; set; }
-
-        public decimal? Volume { get; set; }
-
-        // ReSharper disable once InconsistentNaming
-        public decimal? OneRM { get; set; }
-
         public List<StrongPersonalRecordType> PersonalRecords = new();
-
-        public int GetNumberOfPrs()
-        {
-            return PersonalRecords.Count;
-        }
     }
 }

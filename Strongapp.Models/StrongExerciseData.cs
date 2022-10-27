@@ -28,15 +28,5 @@ namespace Strongapp.Models
         public StrongExerciseCategory Category { get; set; }
 
         public List<StrongExerciseSetData> Sets { get; set; } = new List<StrongExerciseSetData>();
-
-        public decimal? GetVolume()
-        {
-            return Sets.Sum(x => x.Volume);
-        }
-
-        public int GetNumberOfPrs()
-        {
-            return Sets.Sum(x => x.GetNumberOfPrs());
-        }
     }
 }

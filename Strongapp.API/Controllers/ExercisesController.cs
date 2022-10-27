@@ -41,17 +41,19 @@ namespace Strongapp.API.Controllers
             {
                 var oneRMPr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(OneRM))
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, Weight = Convert.ToInt32(x.Set.OneRM) });
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, 
+                        Weight = Convert.ToInt32(_oneRmWeightCalculator.CalculatePredictedOneRMWeight(x.Set.Weight.Value, x.Set.Reps.Value)) });
                 personalRecords.AddRange(oneRMPr);
                 
                 var weightPr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(Weight))
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = Weight, Weight = x.Set.Weight, Reps = x.Set.Reps });
                 personalRecords.AddRange(weightPr);
-                
+
+                var volumeFactor = exercise.Category == StrongExerciseCategory.Dumbbell ? 2 : 1;
                 var maxVolumePr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(MaxVolume))
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume });
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = volumeFactor * x.Set.Weight * x.Set.Reps });
                 personalRecords.AddRange(maxVolumePr);
             }
 
@@ -77,7 +79,7 @@ namespace Strongapp.API.Controllers
 
                 var maxVolumePr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(MaxVolumeAdded))
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.AddedVolume });
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.Weight * x.Set.Reps });
                 personalRecords.AddRange(maxVolumePr);
             }
 
@@ -98,10 +100,10 @@ namespace Strongapp.API.Controllers
 
             if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
             {
-                // ReSharper disable once InconsistentNaming
                 var oneRMPr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(OneRM))
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, Weight = Convert.ToInt32(x.Set.OneRM) })
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = OneRM, 
+                        Weight = Convert.ToInt32(_oneRmWeightCalculator.CalculatePredictedOneRMWeight(x.Set.Weight.Value, x.Set.Reps.Value)) })
                     .LastOrDefault();
                 if (oneRMPr != null)
                 {
@@ -117,9 +119,10 @@ namespace Strongapp.API.Controllers
                     personalRecords.Add(weightPr);
                 }
 
+                var volumeFactor = exercise.Category == StrongExerciseCategory.Dumbbell ? 2 : 1;
                 var maxVolumePr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(MaxVolume))
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume })
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = volumeFactor * x.Set.Weight * x.Set.Reps })
                     .LastOrDefault();
                 if (maxVolumePr != null)
                 {
@@ -164,7 +167,7 @@ namespace Strongapp.API.Controllers
 
                 var maxVolumePr = performances
                     .Where(x => x.Set.PersonalRecords.Contains(MaxVolumeAdded))
-                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.AddedVolume })
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.Weight * x.Set.Reps })
                     .LastOrDefault();
 
                 if (maxVolumePr != null)
