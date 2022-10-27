@@ -6,10 +6,10 @@ namespace Strongapp.UI.Components
     public partial class WorkoutSummary
     {
         [Parameter]
-        public StrongWorkout Workout { get; set; } = new StrongWorkout();
+        public StrongWorkoutSummary Workout { get; set; } = new StrongWorkoutSummary();
 
         [Parameter] 
-        public EventCallback<StrongWorkout> OnRemoveWorkout { get; set; }
+        public EventCallback<StrongWorkoutSummary> OnRemoveWorkout { get; set; }
 
         public async Task RemoveWorkout()
         {

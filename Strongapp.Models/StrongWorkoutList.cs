@@ -8,7 +8,7 @@ namespace Strongapp.Models
 {
     public class StrongWorkoutList
     {
-        public List<StrongWorkout> Items { get; set; }
+        public List<StrongWorkoutSummary> Items { get; set; }
 
         public int TotalItemCount { get; set; }
     }

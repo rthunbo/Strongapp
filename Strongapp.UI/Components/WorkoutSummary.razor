@@ -1,6 +1,6 @@
 ﻿<Card Title="@Workout.WorkoutName" SubTitle="@Workout.Date.ToLongDateString()" 
       EditUrl="@($"/workouts/edit/{Workout.Id}")" OnRemove="RemoveWorkout">
-    <p><i class="fas fa-weight-hanging"></i> @Workout.GetVolume() kg &nbsp; &nbsp; <i class="fas fa-medal"></i> @Workout.GetNumberOfPrs()</p>
+    <p><i class="fas fa-weight-hanging"></i> @Workout.Volume kg &nbsp; &nbsp; <i class="fas fa-medal"></i> @Workout.NumberOfPersonalRecords</p>
     <table class="table table-sm">
         <thead>
             <tr>
@@ -12,9 +12,9 @@
             @foreach (var exercise in Workout.ExerciseData)
             {
                 <tr>
-                    <td>@exercise.Sets.Count x @exercise.ExerciseName</td>
+                    <td>@exercise.NumberOfSets x @exercise.ExerciseName</td>
                     <td>
-                        <FormatBestSet Exercise="exercise" />
+                        <FormatSet Set="exercise.BestSet" />
                     </td>
                 </tr>
             }

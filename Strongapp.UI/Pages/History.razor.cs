@@ -14,7 +14,7 @@ namespace Strongapp.UI.Pages
         [Inject]
         public NavigationManager NavManager { get; set; }
 
-        private Virtualize<StrongWorkout> VirtualizeContainer { get; set; }
+        private Virtualize<StrongWorkoutSummary> VirtualizeContainer { get; set; }
 
         private Stopwatch timer = new Stopwatch();
 
@@ -29,7 +29,7 @@ namespace Strongapp.UI.Pages
             Console.WriteLine($"Full rendering took {timer.ElapsedMilliseconds} ms.");
         }
 
-        protected async Task RemoveWorkout(StrongWorkout workout)
+        protected async Task RemoveWorkout(StrongWorkoutSummary workout)
         {
             await WorkoutService.DeleteWorkout(workout.Id);
             await VirtualizeContainer.RefreshDataAsync();
@@ -40,11 +40,11 @@ namespace Strongapp.UI.Pages
             NavManager.NavigateTo("workouts/edit");
         }
 
-        public async ValueTask<ItemsProviderResult<StrongWorkout>> LoadWorkouts(ItemsProviderRequest request)
+        public async ValueTask<ItemsProviderResult<StrongWorkoutSummary>> LoadWorkouts(ItemsProviderRequest request)
         {
             Console.WriteLine($"Index: {request.StartIndex} Count: {request.Count}");
             StrongWorkoutList result = await WorkoutService.GetWorkouts(request.StartIndex, request.Count, request.CancellationToken);
-            return new ItemsProviderResult<StrongWorkout>(result.Items, result.TotalItemCount);
+            return new ItemsProviderResult<StrongWorkoutSummary>(result.Items, result.TotalItemCount);
         }
     }
 }

@@ -28,6 +28,23 @@ namespace Strongapp.API.Controllers
                 .OrderByDescending(x => x.Date)
                 .Skip(start)
                 .Take(count)
+                .ToList()
+                .Select(x => new StrongWorkoutSummary
+                {
+                    Id = x.Id,
+                    Date = x.Date,
+                    WorkoutName = x.WorkoutName,
+                    Volume = x.GetVolume(),
+                    NumberOfPersonalRecords = x.GetNumberOfPrs(),
+                    ExerciseData = x.ExerciseData.Select(y => new StrongExerciseDataSummary
+                    {
+                        ExerciseName = y.ExerciseName,
+                        Category = y.Category,
+                        NumberOfSets = y.Sets.Count,
+                        BestSet = Helpers.GetBestSet(y.Category, y.Sets)
+                    }).ToList()
+
+                })
                 .ToList();
             var totalCount = _repository.AsQueryable()
                 .Count();
