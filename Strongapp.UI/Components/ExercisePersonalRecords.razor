@@ -30,6 +30,61 @@
             </li>
         </ul>
     }
+    @if (ExerciseCategory is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.AssistedBodyweight)
+    {
+        <ul style="padding-left: 0">
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxReps))
+                {
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxReps);
+                    <span class="float-end">@record.Reps reps</span>
+                }
+                <span><strong>Max Reps</strong></span>
+            </li>
+        </ul>
+    }
+    @if (ExerciseCategory is StrongExerciseCategory.WeightedBodyweight)
+    {
+        <ul style="padding-left: 0">
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxReps))
+                {
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxReps);
+                    <span class="float-end">@record.Reps reps</span>
+                }
+                <span><strong>Max Reps</strong></span>
+            </li>
+        </ul>
+
+        <ul style="padding-left: 0">
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxWeightAdded))
+                {
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxWeightAdded);
+                    @if (record.Weight == 0)
+                    {
+                        <span class="float-end">@record.Reps reps</span>
+                    }
+                    else
+                    {
+                        <span class="float-end">+@record.Weight kg x @record.Reps</span>
+                    }
+                }
+                <span><strong>Max Weight Added</strong></span>
+            </li>
+        </ul>
+
+        <ul style="padding-left: 0">
+            <li style="display: block; padding: 0.25rem;">
+                @if (PersonalRecords.Any(x => x.Type == StrongPersonalRecordsType.MaxVolumeAdded))
+                {
+                    var record = PersonalRecords.First(x => x.Type == StrongPersonalRecordsType.MaxVolumeAdded);
+                    <span class="float-end">@record.Weight kg</span>
+                }
+                <span><strong>Max Reps</strong></span>
+            </li>
+        </ul>
+    }
     
     <button class="btn btn-secondary btn-sm" @onclick="ViewRecordsHistory" style="width: 100%; margin-bottom: 20px;">View Records History</button>
         

@@ -11,6 +11,9 @@ namespace Strongapp.Models
         // ReSharper disable once InconsistentNaming
         OneRM,
         Weight,
-        MaxVolume
+        MaxVolume,
+        MaxReps,
+        MaxWeightAdded,
+        MaxVolumeAdded
     }
 }

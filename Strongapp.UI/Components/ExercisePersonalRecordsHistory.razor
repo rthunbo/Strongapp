@@ -43,4 +43,74 @@
             }
         </ul>
     }
+    @if (ExerciseCategory is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.AssistedBodyweight)
+    {
+        <h5>Max Reps</h5>
+
+        <ul style="padding-left: 0">
+            @foreach (var personalRecord in PersonalRecordsHistory
+                .Where(x => x.Type == StrongPersonalRecordsType.MaxReps)
+                .OrderByDescending(x => x.Reps))
+            {
+                <li style="display: block; padding: 0.25rem;">
+                    <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                    <span><strong>@personalRecord.Reps reps</strong></span>
+                </li>
+            }
+        </ul>
+    }
+    
+    @if (ExerciseCategory is StrongExerciseCategory.WeightedBodyweight)
+    {
+        <h5>Max Reps</h5>
+
+        <ul style="padding-left: 0">
+            @foreach (var personalRecord in PersonalRecordsHistory
+           .Where(x => x.Type == StrongPersonalRecordsType.MaxReps)
+           .OrderByDescending(x => x.Reps))
+            {
+                <li style="display: block; padding: 0.25rem;">
+                    <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                    <span><strong>@personalRecord.Reps reps</strong></span>
+                </li>
+            }
+        </ul>
+
+        <h5>Max Weight Added</h5>
+
+        <ul style="padding-left: 0">
+            @foreach (var personalRecord in PersonalRecordsHistory
+                .Where(x => x.Type == StrongPersonalRecordsType.MaxWeightAdded)
+                .OrderByDescending(x => x.Weight).ThenByDescending(x => x.Reps))
+            {
+                <li style="display: block; padding: 0.25rem;">
+                    <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                    <span>
+                        @if (personalRecord.Weight == 0)
+                        {
+                            <strong>@personalRecord.Reps reps</strong>
+                        }
+                        else
+                        {
+                            <strong>+@personalRecord.Weight kg x @personalRecord.Reps</strong>
+                        }
+                    </span>
+                </li>
+            }
+        </ul>
+
+        <h5>Max Volume Added</h5>
+
+        <ul style="padding-left: 0">
+            @foreach (var personalRecord in PersonalRecordsHistory
+                .Where(x => x.Type == StrongPersonalRecordsType.MaxVolumeAdded)
+                .OrderByDescending(x => x.Weight))
+            {
+                <li style="display: block; padding: 0.25rem;">
+                    <span class="float-end">@personalRecord.Date.Value.ToShortDateString()</span>
+                    <span><strong>@personalRecord.Weight kg</strong></span>
+                </li>
+            }
+        </ul>
+    }
 </div>

@@ -25,6 +25,10 @@ namespace Strongapp.API.Services
                 foreach (var set in exercise.Sets)
                 {
                     set.Volume = ComputeVolume(exercise.Category, bodyweight, set);
+                    if (exercise.Category == StrongExerciseCategory.WeightedBodyweight)
+                    {
+                        set.AddedVolume = set.Reps * set.Weight;
+                    }
                 }
             }
         }
@@ -76,7 +80,7 @@ namespace Strongapp.API.Services
                 var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
                 if (maxWeightSet != null)
                 {
-                    maxWeightSet.HasWeightPr = weightPr == null || maxWeightSet.Weight > weightPr.Weight;
+                    maxWeightSet.HasWeightPr = weightPr == null || maxWeightSet.Weight > weightPr.Weight || (maxWeightSet.Weight == weightPr.Weight && maxWeightSet.Reps > weightPr.Reps);
                 }
             }
 
@@ -107,12 +111,21 @@ namespace Strongapp.API.Services
                 }
             }
 
-            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight)
+            if (exercise.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell)
             {
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.Volume);
                 if (maxVolumeSet != null)
                 {
                     maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.Volume > volumePr.Volume;
+                }
+            }
+
+            if (exercise.Category is StrongExerciseCategory.WeightedBodyweight)
+            {
+                var maxVolumeSet = exercise.Sets.MaxBy(x => x.AddedVolume);
+                if (maxVolumeSet != null)
+                {
+                    maxVolumeSet.HasVolumePr = volumePr == null || maxVolumeSet.AddedVolume > volumePr.AddedVolume;
                 }
             }
 

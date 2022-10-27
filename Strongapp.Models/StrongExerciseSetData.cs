@@ -29,6 +29,8 @@ namespace Strongapp.Models
 
         public bool IsComplete { get; set; }
 
+        public decimal? AddedVolume { get; set; }
+
         public decimal? Volume { get; set; }
 
         // ReSharper disable once InconsistentNaming
@@ -55,6 +57,7 @@ namespace Strongapp.Models
             if (HasDistancePr) numPrs++;
             if (HasVolumePr) numPrs++;
             if (HasWeightPr) numPrs++;
+            if (HasOneRMPr) numPrs++;
             return numPrs;
         }
     }

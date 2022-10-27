@@ -56,6 +56,32 @@ namespace Strongapp.API.Controllers
                 personalRecords.AddRange(maxVolumePr);
             }
 
+            if (exercise.Category is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.AssistedBodyweight)
+            {
+                var maxRepsPr = performances
+                    .Where(x => x.Set.HasRepsPr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps });
+                personalRecords.AddRange(maxRepsPr);
+            }
+
+            if (exercise.Category is StrongExerciseCategory.WeightedBodyweight)
+            {
+                var maxRepsPr = performances
+                    .Where(x => x.Set.HasRepsPr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps });
+                personalRecords.AddRange(maxRepsPr);
+
+                var maxWeightPr = performances
+                    .Where(x => x.Set.HasWeightPr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxWeightAdded, Weight = x.Set.Weight, Reps = x.Set.Reps });
+                personalRecords.AddRange(maxWeightPr);
+
+                var maxVolumePr = performances
+                    .Where(x => x.Set.HasVolumePr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.AddedVolume });
+                personalRecords.AddRange(maxVolumePr);
+            }
+
             return personalRecords.OrderBy(x => x.Date).ToList();
         }
 
@@ -96,6 +122,52 @@ namespace Strongapp.API.Controllers
                     .Where(x => x.Set.HasVolumePr)
                     .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolume, Weight = x.Set.Volume })
                     .LastOrDefault();
+                if (maxVolumePr != null)
+                {
+                    personalRecords.Add(maxVolumePr);
+                }
+            }
+
+            if (exercise.Category is StrongExerciseCategory.RepsOnly or StrongExerciseCategory.AssistedBodyweight)
+            {
+                var maxRepsPr = performances
+                    .Where(x => x.Set.HasRepsPr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps })
+                    .LastOrDefault();
+
+                if (maxRepsPr != null)
+                {
+                    personalRecords.Add(maxRepsPr);
+                }
+            }
+
+            if (exercise.Category is StrongExerciseCategory.WeightedBodyweight)
+            {
+                var maxRepsPr = performances
+                    .Where(x => x.Set.HasRepsPr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxReps, Reps = x.Set.Reps })
+                    .LastOrDefault();
+
+                if (maxRepsPr != null)
+                {
+                    personalRecords.Add(maxRepsPr);
+                }
+
+                var maxWeightPr = performances
+                    .Where(x => x.Set.HasWeightPr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxWeightAdded, Weight = x.Set.Weight, Reps = x.Set.Reps })
+                    .LastOrDefault();
+
+                if (maxWeightPr != null)
+                {
+                    personalRecords.Add(maxWeightPr);
+                }
+
+                var maxVolumePr = performances
+                    .Where(x => x.Set.HasVolumePr)
+                    .Select(x => new StrongPersonalRecord { Date = x.Date, Type = MaxVolumeAdded, Weight = x.Set.AddedVolume })
+                    .LastOrDefault();
+
                 if (maxVolumePr != null)
                 {
                     personalRecords.Add(maxVolumePr);
