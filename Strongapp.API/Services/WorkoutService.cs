@@ -123,7 +123,7 @@ namespace Strongapp.API.Services
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.Weight * x.Reps);
                 if (maxVolumeSet != null)
                 {
-                    if (personalRecord == null || maxVolumeSet.Weight * maxVolumeSet.Reps > personalRecord.Weight * personalRecord.Weight)
+                    if (personalRecord == null || maxVolumeSet.Weight * maxVolumeSet.Reps > personalRecord.Weight * personalRecord.Reps)
                     {
                         maxVolumeSet.PersonalRecords.Add(StrongPersonalRecordType.MaxVolume);
                     }
@@ -137,7 +137,7 @@ namespace Strongapp.API.Services
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.Weight * x.Reps);
                 if (maxVolumeSet != null)
                 {
-                    if (personalRecord == null || maxVolumeSet.Weight * maxVolumeSet.Reps > personalRecord.Weight * personalRecord.Weight)
+                    if (personalRecord == null || maxVolumeSet.Weight * maxVolumeSet.Reps > personalRecord.Weight * personalRecord.Reps)
                     {
                         maxVolumeSet.PersonalRecords.Add(StrongPersonalRecordType.MaxVolumeAdded);
                     }
