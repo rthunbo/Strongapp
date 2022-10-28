@@ -15,7 +15,7 @@ namespace Strongapp.UI.Components
         [Inject]
         public IExerciseService ExerciseService { get; set; } = default!;
 
-        public List<StrongPersonalRecord> PersonalRecordsHistory { get; set; }
+        public List<StrongPersonalRecord> PersonalRecordsHistory { get; set; } = new List<StrongPersonalRecord>();
 
         protected override async Task OnInitializedAsync()
         {

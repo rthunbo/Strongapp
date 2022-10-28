@@ -15,7 +15,7 @@ namespace Strongapp.UI.Pages
         [Inject]
         public IMeasurementService MeasurementService { get; set; }
 
-        public List<StrongMeasurement> Measurements { get; set; }
+        public List<StrongMeasurement> Measurements { get; set; } = new List<StrongMeasurement>();
 
         public StrongMeasurement? MostRecentWeightMeasurement => Measurements.Where(x => x.Name == "Weight").OrderBy(x => x.Date).LastOrDefault();
 
