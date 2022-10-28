@@ -107,7 +107,7 @@ namespace Strongapp.UI.Pages
                 var selectedExercises = (List<StrongExerciseWithMetadata>)result.Data;
                 foreach (var exercise in selectedExercises)
                 {
-                    Workout.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, GetSets(exercise)));
+                    Workout.ExerciseData.Add(new StrongExerciseData { ExerciseName = exercise.ExerciseName, Sets = GetSets(exercise) });
                 }
             }
         }
@@ -177,8 +177,6 @@ namespace Strongapp.UI.Pages
                 ExerciseData = template.ExerciseData.Select(x => new StrongExerciseData
                 {
                     ExerciseName = x.ExerciseName,
-                    BodyPart = x.BodyPart,
-                    Category = x.Category,
                     Sets = x.Sets.Select(ConvertSet).ToList()
                 }).ToList(),
             };
@@ -188,9 +186,10 @@ namespace Strongapp.UI.Pages
         {
             foreach (var exerciseData in Workout.ExerciseData)
             {
+                var category = Exercises.First(x => x.ExerciseName == exerciseData.ExerciseName).Category;
                 foreach (var set in exerciseData.Sets)
                 {
-                    if (!IsValidSet(exerciseData.Category, set))
+                    if (!IsValidSet(category, set))
                     {
                         return true;
                     }
@@ -204,16 +203,15 @@ namespace Strongapp.UI.Pages
             var exerciseDataList = new List<StrongExerciseData>();
             foreach (var exerciseData in Workout.ExerciseData)
             {
+                var category = Exercises.First(x => x.ExerciseName == exerciseData.ExerciseName).Category;
                 var newExerciseData = new StrongExerciseData
                 {
-                    BodyPart = exerciseData.BodyPart,
-                    Category = exerciseData.Category,
                     ExerciseName = exerciseData.ExerciseName,
                 };
                 var sets = new List<StrongExerciseSetData>();
                 foreach (var set in exerciseData.Sets)
                 {
-                    if (IsValidSet(exerciseData.Category, set))
+                    if (IsValidSet(category, set))
                     {
                         sets.Add(set);
                     }

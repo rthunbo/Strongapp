@@ -14,26 +14,54 @@ namespace Strongapp.API.Controllers
         private readonly WorkoutRepository _repository;
         private readonly WorkoutService _service;
         private readonly MeasurementRepository _measurementsRepository;
+        private readonly ExerciseRepository _exerciseRepository;
 
-        public WorkoutsController(ILogger<WorkoutsController> logger, WorkoutRepository repository, WorkoutService service, MeasurementRepository measurementsRepository)
+        public WorkoutsController(ILogger<WorkoutsController> logger, WorkoutRepository repository, WorkoutService service, MeasurementRepository measurementsRepository, ExerciseRepository exerciseRepository)
         {
             _logger = logger;
             _repository = repository;
             _service = service;
             _measurementsRepository = measurementsRepository;
+            _exerciseRepository = exerciseRepository;
         }
 
         [HttpGet]
         public async Task<StrongWorkoutList> Get([FromQuery] int start, [FromQuery] int count)
         {
             var measurements = await _measurementsRepository.GetAsync();
+            var exercises = await _exerciseRepository.GetAsync();
 
             var items = _repository.AsQueryable()
                 .OrderByDescending(x => x.Date)
                 .Skip(start)
                 .Take(count)
                 .ToList()
-                .Select(x => CreateWorkoutSummary(x, GetBodyweight(x.Date, measurements)))
+                .Select(x => {
+                    var bodyweight = GetBodyweight(x.Date, measurements);
+                    return new StrongWorkoutSummary
+                    {
+                        Id = x.Id,
+                        Date = x.Date,
+                        WorkoutName = x.WorkoutName,
+                        Volume = x.ExerciseData.Sum(e => e.Sets.Sum(s =>
+                        {
+                            var category = exercises.First(ex => ex.ExerciseName == e.ExerciseName).Category;
+                            return ComputeVolume(category, bodyweight, s);
+                        })),
+                        NumberOfPersonalRecords = x.ExerciseData.Sum(x => x.Sets.Sum(y => y.PersonalRecords.Count)),
+                        ExerciseData = x.ExerciseData.Select(e =>
+                        {
+                            var category = exercises.First(ex => ex.ExerciseName == e.ExerciseName).Category;
+                            return new StrongExerciseDataSummary
+                            {
+                                ExerciseName = e.ExerciseName,
+                                NumberOfSets = e.Sets.Count,
+                                BestSet = Helpers.GetBestSet(category, e.Sets)
+                            };
+                        }).ToList()
+
+                    };
+                })
                 .ToList();
             var totalCount = _repository.AsQueryable()
                 .Count();
@@ -53,7 +81,7 @@ namespace Strongapp.API.Controllers
             await _repository.CreateAsync(workout);
 
             var workouts = await _repository.GetAsync();
-            _service.UpdatePersonalRecords(workouts);
+            await _service.UpdatePersonalRecords(workouts);
             foreach (var w in workouts) await _repository.UpdateAsync(w.Id, w);
 
             return Created($"/workouts/{workout.Id}", workout);
@@ -65,7 +93,7 @@ namespace Strongapp.API.Controllers
             await _repository.UpdateAsync(id, workout);
 
             var workouts = await _repository.GetAsync();
-            _service.UpdatePersonalRecords(workouts);
+            await _service.UpdatePersonalRecords(workouts);
             foreach (var w in workouts) await _repository.UpdateAsync(w.Id, w);
         }
 
@@ -73,37 +101,6 @@ namespace Strongapp.API.Controllers
         public async Task Delete(string id)
         {
             await _repository.RemoveAsync(id);
-        }
-
-        private StrongWorkoutSummary CreateWorkoutSummary(StrongWorkout x, decimal bodyweight)
-        {
-            return new StrongWorkoutSummary
-            {
-                Id = x.Id,
-                Date = x.Date,
-                WorkoutName = x.WorkoutName,
-                Volume = ComputeVolume(x, bodyweight),
-                NumberOfPersonalRecords = x.ExerciseData.Sum(x => x.Sets.Sum(y => y.PersonalRecords.Count)),
-                ExerciseData = x.ExerciseData.Select(y => new StrongExerciseDataSummary
-                {
-                    ExerciseName = y.ExerciseName,
-                    Category = y.Category,
-                    NumberOfSets = y.Sets.Count,
-                    BestSet = Helpers.GetBestSet(y.Category, y.Sets)
-                }).ToList()
-
-            };
-        }
-
-        private decimal? ComputeVolume(StrongWorkout workout, decimal bodyweight)
-        {
-            decimal? volume = 0;
-            foreach (var exerciseData in workout.ExerciseData)
-            {
-                volume += exerciseData.Sets.Sum(y => ComputeVolume(exerciseData.Category, bodyweight, y));
-            }
-
-            return volume;
         }
 
         private decimal? ComputeVolume(StrongExerciseCategory category, decimal bodyweight, StrongExerciseSetData set)

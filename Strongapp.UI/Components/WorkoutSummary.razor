@@ -1,4 +1,6 @@
-﻿<Card Title="@Workout.WorkoutName" SubTitle="@Workout.Date.ToLongDateString()" 
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<Card Title="@Workout.WorkoutName" SubTitle="@Workout.Date.ToLongDateString()" 
       EditUrl="@($"/workouts/edit/{Workout.Id}")" OnRemove="RemoveWorkout">
     <p><i class="fas fa-weight-hanging"></i> @Workout.Volume kg &nbsp; &nbsp; <i class="fas fa-medal"></i> @Workout.NumberOfPersonalRecords</p>
     <table class="table table-sm">
@@ -14,7 +16,7 @@
                 <tr>
                     <td>@exercise.NumberOfSets x @exercise.ExerciseName</td>
                     <td>
-                        <FormatSet Set="exercise.BestSet" />
+                        <FormatSet Set="exercise.BestSet" Category="Exercises.Find(x => x.ExerciseName == exercise.ExerciseName).Category" />
                     </td>
                 </tr>
             }

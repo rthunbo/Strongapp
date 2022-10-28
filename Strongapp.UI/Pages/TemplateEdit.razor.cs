@@ -98,7 +98,7 @@ namespace Strongapp.UI.Pages
                 var selectedExercises = (List<StrongExerciseWithMetadata>) result.Data;
                 foreach (var exercise in selectedExercises)
                 {
-                    Template.ExerciseData.Add(new StrongExerciseData(exercise.ExerciseName, exercise.BodyPart, exercise.Category, GetSets(exercise)));
+                    Template.ExerciseData.Add(new StrongExerciseData { ExerciseName = exercise.ExerciseName, Sets = GetSets(exercise) });
                 }
 
                 IsModified = true;

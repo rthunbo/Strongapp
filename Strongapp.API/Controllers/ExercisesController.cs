@@ -311,7 +311,7 @@ namespace Strongapp.API.Controllers
                     Category = x.Category,
                     ExerciseName = x.ExerciseName,
                     PreviousPerformance = previousPerformance,
-                    BestSet = Helpers.GetBestSet(x.Category, history.Select(x => Helpers.GetBestSet(x.Category, x.Sets)))
+                    BestSet = Helpers.GetBestSet(x.Category, history.Select(y => Helpers.GetBestSet(x.Category, y.Sets)))
                 };
             });
         }

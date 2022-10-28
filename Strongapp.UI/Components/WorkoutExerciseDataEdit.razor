@@ -5,30 +5,30 @@
         <Header>
             <th>Set</th>
             <th>Previous</th>
-            @if (ExerciseData.Category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.MachineOther)
+            @if (Category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.MachineOther)
             {
                 <th class="col-2">kg</th>
                 <th class="col-2">Reps</th>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.WeightedBodyweight)
+            @if (Category is StrongExerciseCategory.WeightedBodyweight)
             {
                 <th>+kg</th>
                 <th>Reps</th>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.AssistedBodyweight)
+            @if (Category is StrongExerciseCategory.AssistedBodyweight)
             {
                 <th>-kg</th>
                 <th>Reps</th>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.RepsOnly)
+            @if (Category is StrongExerciseCategory.RepsOnly)
             {
                 <th class="col-4">Reps</th>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.Duration)
+            @if (Category is StrongExerciseCategory.Duration)
             {
                 <th>Time</th>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.Cardio)
+            @if (Category is StrongExerciseCategory.Cardio)
             {
                 <th>km</th>
                 <th>Time</th>
@@ -45,10 +45,10 @@
             <td>
                 @if (Previous != null && set.SetOrder <= Previous.Sets.Count)
                 {
-                    <FormatSet Set="Previous.Sets[set.SetOrder-1]" Category="ExerciseData.Category" />
+                    <FormatSet Set="Previous.Sets[set.SetOrder-1]" Category="Category" />
                 }
             </td>
-            @if (ExerciseData.Category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.MachineOther or StrongExerciseCategory.WeightedBodyweight or StrongExerciseCategory.AssistedBodyweight)
+            @if (Category is StrongExerciseCategory.Barbell or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.MachineOther or StrongExerciseCategory.WeightedBodyweight or StrongExerciseCategory.AssistedBodyweight)
             {
                 <td>
                     <CustomInputNumber placeholder="@set.InitialWeight" style="width: 100%" Value="@set.Weight" TValue="decimal?" ValueChanged="(value) => WeightChanged(set, value)" ValueExpression="() => set.Weight" />
@@ -57,19 +57,19 @@
                     <CustomInputNumber placeholder="@set.InitialReps" style="width: 100%" Value="@set.Reps" TValue="int?" ValueChanged="(value) => RepsChanged(set, value)" ValueExpression="() => set.Reps" />
                 </td>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.RepsOnly)
+            @if (Category is StrongExerciseCategory.RepsOnly)
             {
                 <td>
                     <CustomInputNumber placeholder="@set.InitialReps" style="width: 100%" Value="@set.Reps" TValue="int?" ValueChanged="(value) => RepsChanged(set, value)" ValueExpression="() => set.Reps" />
                 </td>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.Duration)
+            @if (Category is StrongExerciseCategory.Duration)
             {
                 <td>
                     <CustomInputNumber placeholder="@set.InitialSeconds" style="width: 100%" Value="@set.Seconds" TValue="int?" ValueChanged="(value) => SecondsChanged(set, value)" ValueExpression="() => set.Seconds" />
                 </td>
             }
-            @if (ExerciseData.Category is StrongExerciseCategory.Cardio)
+            @if (Category is StrongExerciseCategory.Cardio)
             {
                 <td>
                     <CustomInputNumber placeholder="@set.InitialDistance" style="width: 100%" Value="@set.Distance" TValue="decimal?" ValueChanged="(value) => DistanceChanged(set, value)" ValueExpression="() => set.Distance" />

@@ -10,16 +10,20 @@ namespace Strongapp.API.Services
     public class WorkoutService
     {
         private readonly MeasurementRepository _repository;
+        private readonly ExerciseRepository _exerciseRepository;
         private readonly OneRMWeightCalculator _oneRmWeightCalculator;
 
-        public WorkoutService(MeasurementRepository repository, OneRMWeightCalculator oneRmWeightCalculator)
+        public WorkoutService(MeasurementRepository repository, OneRMWeightCalculator oneRmWeightCalculator, ExerciseRepository exerciseRepository)
         {
             _repository = repository;
             _oneRmWeightCalculator = oneRmWeightCalculator;
+            _exerciseRepository = exerciseRepository;
         }
 
-        public void UpdatePersonalRecords(List<StrongWorkout> workouts)
+        public async Task UpdatePersonalRecords(List<StrongWorkout> workouts)
         {
+            var exercises = await _exerciseRepository.GetAsync();
+
             foreach (var workout in workouts)
             {
                 var exerciseDataList = workouts
@@ -29,15 +33,17 @@ namespace Strongapp.API.Services
 
                 foreach (var exercise in workout.ExerciseData)
                 {
+                    var category = exercises.Find(x => x.ExerciseName == exercise.ExerciseName).Category;
+
                     var exerciseHistory = exerciseDataList
                         .Where(x => x.ExerciseName == exercise.ExerciseName);
                     
-                    UpdatePersonalRecords(exercise, exerciseHistory);
+                    UpdatePersonalRecords(category, exercise, exerciseHistory);
                 }
             }
         }
 
-        private void UpdatePersonalRecords(StrongExerciseData exercise, IEnumerable<StrongExerciseData> exerciseHistory)
+        private void UpdatePersonalRecords(StrongExerciseCategory category, StrongExerciseData exercise, IEnumerable<StrongExerciseData> exerciseHistory)
         {
             var sets = exerciseHistory.SelectMany(x => x.Sets).ToList();
 
@@ -47,7 +53,7 @@ namespace Strongapp.API.Services
             }
 
             // Weight
-            if (exercise.Category is MachineOther or Barbell or Dumbbell)
+            if (category is MachineOther or Barbell or Dumbbell)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.Weight));
                 var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
@@ -61,7 +67,7 @@ namespace Strongapp.API.Services
             }
 
             // MaxWeightAdded
-            if (exercise.Category is WeightedBodyweight)
+            if (category is WeightedBodyweight)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxWeightAdded));
                 var maxWeightSet = exercise.Sets.MaxBy(x => x.Weight);
@@ -75,7 +81,7 @@ namespace Strongapp.API.Services
             }
 
             // MaxReps
-            if (exercise.Category is RepsOnly or WeightedBodyweight or AssistedBodyweight)
+            if (category is RepsOnly or WeightedBodyweight or AssistedBodyweight)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxReps));
                 var maxRepsSet = exercise.Sets.MaxBy(x => x.Reps);
@@ -89,7 +95,7 @@ namespace Strongapp.API.Services
             }
 
             // MaxDuration
-            if (exercise.Category is Duration or Cardio)
+            if (category is Duration or Cardio)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxDuration));
                 var maxDurationSet = exercise.Sets.MaxBy(x => x.Seconds);
@@ -103,7 +109,7 @@ namespace Strongapp.API.Services
             }
 
             // MaxDistance
-            if (exercise.Category is Cardio)
+            if (category is Cardio)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxDistance));
                 var maxDistanceSet = exercise.Sets.MaxBy(x => x.Distance);
@@ -117,7 +123,7 @@ namespace Strongapp.API.Services
             }
 
             // MaxVolume
-            if (exercise.Category is MachineOther or Barbell or Dumbbell)
+            if (category is MachineOther or Barbell or Dumbbell)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolume));
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.Weight * x.Reps);
@@ -131,7 +137,7 @@ namespace Strongapp.API.Services
             }
 
             // MaxVolumeAdded
-            if (exercise.Category is WeightedBodyweight)
+            if (category is WeightedBodyweight)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.MaxVolumeAdded));
                 var maxVolumeSet = exercise.Sets.MaxBy(x => x.Weight * x.Reps);
@@ -145,7 +151,7 @@ namespace Strongapp.API.Services
             }
 
             // OneRM
-            if (exercise.Category is MachineOther or Barbell or Dumbbell)
+            if (category is MachineOther or Barbell or Dumbbell)
             {
                 var personalRecord = sets.LastOrDefault(x => x.PersonalRecords.Contains(StrongPersonalRecordType.OneRM));
                 var maxOneRMSet = exercise.Sets.MaxBy(x => _oneRmWeightCalculator.CalculatePredictedOneRMWeight(x.Weight.Value, x.Reps.Value));
@@ -161,7 +167,7 @@ namespace Strongapp.API.Services
             }
 
             // BestPace
-            if (exercise.Category is Cardio)
+            if (category is Cardio)
             {
                 // TODO 
             }

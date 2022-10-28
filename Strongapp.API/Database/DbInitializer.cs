@@ -64,7 +64,6 @@ namespace Strongapp.API.Database
                             .Select(g => new StrongExerciseData
                             {
                                 ExerciseName = g.Key.ExerciseName,
-                                Category = exercisesInitialLoad.First(x => x.ExerciseName == g.Key.ExerciseName)!.Category,
                                 Sets = g.Select(x => new StrongExerciseSetData
                                 {
                                     SetOrder = x.SetOrder,
@@ -76,7 +75,7 @@ namespace Strongapp.API.Database
                             }).ToList()
                     }).ToList();
 
-                workoutService.UpdatePersonalRecords(workoutsInitialLoad);
+                await workoutService.UpdatePersonalRecords(workoutsInitialLoad);
                 foreach (var w in workoutsInitialLoad) await workoutRepository.CreateAsync(w);
             }
 
@@ -96,10 +95,10 @@ namespace Strongapp.API.Database
                 IsExampleTemplate = true,
                 ExerciseData = new List<StrongExerciseData>
                     {
-                        new StrongExerciseData("Squat (Barbell)", Legs, Barbell, CreateSets(3, 10)),
-                        new StrongExerciseData("Leg Extension (Machine)", Legs, MachineOther, CreateSets(3, 10)),
-                        new StrongExerciseData("Flat Leg Raise", Core, RepsOnly, CreateSets(3, 10)),
-                        new StrongExerciseData("Standing Calf Raise (Dumbbell)", Legs, Dumbbell, CreateSets(3, 10)),
+                        new StrongExerciseData { ExerciseName = "Squat (Barbell)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Leg Extension (Machine)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Flat Leg Raise", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Standing Calf Raise (Dumbbell)", Sets = CreateSets(3, 10) },
                     }
             };
 
@@ -109,11 +108,11 @@ namespace Strongapp.API.Database
                 IsExampleTemplate = true,
                 ExerciseData = new List<StrongExerciseData>
                     {
-                        new StrongExerciseData("Bench Press (Barbell)", Chest, Barbell, CreateSets(3, 10)),
-                        new StrongExerciseData("Incline Bench Press (Barbell)", Chest, Barbell, CreateSets(3, 10)),
-                        new StrongExerciseData("Strict Military Press (Barbell)", Shoulders, Barbell, CreateSets(3, 10)),
-                        new StrongExerciseData("Lateral Raise (Dumbbell)", Shoulders, Dumbbell, CreateSets(3, 10)),
-                        new StrongExerciseData("Skullcrusher (Barbell)", Arms, Barbell, CreateSets(3, 10)),
+                        new StrongExerciseData { ExerciseName = "Bench Press (Barbell)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Incline Bench Press (Barbell)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Strict Military Press (Barbell)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Lateral Raise (Dumbbell)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Skullcrusher (Barbell)", Sets = CreateSets(3, 10) },
                     }
             };
 
@@ -123,10 +122,10 @@ namespace Strongapp.API.Database
                 IsExampleTemplate = true,
                 ExerciseData = new List<StrongExerciseData>
                     {
-                        new StrongExerciseData("Deadlift (Barbell)", Back, Barbell, CreateSets(3, 10)),
-                        new StrongExerciseData("Seated Row (Cable)", Back, MachineOther, CreateSets(3, 10)),
-                        new StrongExerciseData("Lat Pulldown (Cable)", Back, MachineOther, CreateSets(3, 10)),
-                        new StrongExerciseData("Bicep Curl (Barbell)", Arms, Barbell, CreateSets(3, 10)),
+                        new StrongExerciseData { ExerciseName = "Deadlift (Barbell)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Seated Row (Cable)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Lat Pulldown (Cable)", Sets = CreateSets(3, 10) },
+                        new StrongExerciseData { ExerciseName = "Bicep Curl (Barbell)", Sets = CreateSets(3, 10) },
                     }
             };
 
@@ -136,9 +135,9 @@ namespace Strongapp.API.Database
                 IsExampleTemplate = true,
                 ExerciseData = new List<StrongExerciseData>
                     {
-                        new StrongExerciseData("Squat (Barbell)", Legs, Barbell, CreateSets(5, 5)),
-                        new StrongExerciseData("Bench Press (Barbell)", Chest, Barbell, CreateSets(5, 5)),
-                        new StrongExerciseData("Bent Over Row (Barbell)", Back, Barbell, CreateSets(5, 5))
+                        new StrongExerciseData { ExerciseName = "Squat (Barbell)", Sets = CreateSets(5, 5) },
+                        new StrongExerciseData { ExerciseName = "Bench Press (Barbell)", Sets = CreateSets(5, 5) },
+                        new StrongExerciseData { ExerciseName = "Bent Over Row (Barbell)", Sets = CreateSets(5, 5) }
                     }
             };
 
@@ -148,9 +147,9 @@ namespace Strongapp.API.Database
                 IsExampleTemplate = true,
                 ExerciseData = new List<StrongExerciseData>
                     {
-                        new StrongExerciseData("Squat (Barbell)", Legs, Barbell, CreateSets(5, 5)),
-                        new StrongExerciseData("Overhead Press (Barbell)", Shoulders, Barbell, CreateSets(5, 5)),
-                        new StrongExerciseData("Deadlift (Barbell)", Back, Barbell, CreateSets(5, 5))
+                        new StrongExerciseData { ExerciseName = "Squat (Barbell)", Sets = CreateSets(5, 5) },
+                        new StrongExerciseData { ExerciseName = "Overhead Press (Barbell)", Sets = CreateSets(5, 5) },
+                        new StrongExerciseData { ExerciseName = "Deadlift (Barbell)", Sets = CreateSets(5, 5) }
                     }
             };
 

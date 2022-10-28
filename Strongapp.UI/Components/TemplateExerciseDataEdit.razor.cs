@@ -22,7 +22,9 @@ namespace Strongapp.UI.Components
         [Inject]
         public IState<AppStore> State { get; set; } = default!;
 
-        public StrongExerciseData? Previous => State.Value.Exercises.FirstOrDefault(x => x.ExerciseName == ExerciseData.ExerciseName, new StrongExerciseWithMetadata()).PreviousPerformance;
+        public StrongExerciseData? Previous => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).PreviousPerformance;
+
+        public StrongExerciseCategory Category => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).Category;
 
         protected async Task RemoveExercise()
         {
@@ -50,24 +52,18 @@ namespace Strongapp.UI.Components
         private async Task WeightChanged(StrongExerciseSetData Set, decimal? value)
         {
             Set.Weight = value;
-            if (value == null)
-                Set.IsComplete = false;
             await OnModified.InvokeAsync();
         }
 
         private async Task RepsChanged(StrongExerciseSetData Set, int? value)
         {
             Set.Reps = value;
-            if (value == null)
-                Set.IsComplete = false;
             await OnModified.InvokeAsync();
         }
 
         private async Task SecondsChanged(StrongExerciseSetData Set, int? value)
         {
             Set.Seconds = value;
-            if (value == null)
-                Set.IsComplete = false;
             await OnModified.InvokeAsync();
         }
 
@@ -75,23 +71,7 @@ namespace Strongapp.UI.Components
             ? value)
         {
             Set.Distance = value;
-            if (value == null)
-                Set.IsComplete = false;
             await OnModified.InvokeAsync();
-        }
-
-        public void MarkComplete(StrongExerciseSetData Set)
-        {
-            Set.Reps ??= Set.InitialReps;
-            Set.Weight ??= Set.InitialWeight;
-            Set.Seconds ??= Set.InitialSeconds;
-            Set.Distance ??= Set.InitialDistance;
-            Set.IsComplete = true;
-        }
-
-        public void MarkIncomplete(StrongExerciseSetData Set)
-        {
-            Set.IsComplete = false;
         }
     }
 }

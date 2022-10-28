@@ -25,25 +25,27 @@ namespace Strongapp.UI.Components
         [Inject]
         public IState<AppStore> State { get; set; } = default!;
 
-        public StrongExerciseData? Previous => State.Value.Exercises.FirstOrDefault(x => x.ExerciseName == ExerciseData.ExerciseName, new StrongExerciseWithMetadata()).PreviousPerformance;
+        public StrongExerciseData? Previous => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).PreviousPerformance;
+
+        public StrongExerciseCategory Category => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).Category;
 
         public bool IsMarkCompleteDisabled(StrongExerciseSetData Set)
         {
-            if (ExerciseData.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell
+            if (Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell
                 or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight
                 or StrongExerciseCategory.AssistedBodyweight)
             {
                 return Set.Weight == null && Set.InitialWeight == null || Set.Reps == null && Set.InitialReps == null;
             }
-            if (ExerciseData.Category is StrongExerciseCategory.RepsOnly)
+            if (Category is StrongExerciseCategory.RepsOnly)
             {
                 return Set.Reps == null && Set.InitialReps == null;
             }
-            if (ExerciseData.Category is StrongExerciseCategory.Cardio)
+            if (Category is StrongExerciseCategory.Cardio)
             {
                 return Set.Seconds == null && Set.InitialSeconds == null || Set.Distance == null && Set.InitialDistance == null;
             }
-            if (ExerciseData.Category is StrongExerciseCategory.Duration)
+            if (Category is StrongExerciseCategory.Duration)
             {
                 return Set.Seconds == null && Set.InitialSeconds == null;
             }
