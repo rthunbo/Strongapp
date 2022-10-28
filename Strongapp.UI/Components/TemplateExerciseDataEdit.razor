@@ -35,14 +35,7 @@
             }
             <th class="col-1">
                 <div class="text-center">
-                    @if (IsTemplate)
-                    {
-                        <i class="fas fa-lock"></i>
-                    }
-                    @if (!IsTemplate)
-                    {
-                        <i class="fas fa-check"></i>
-                    }
+                    <i class="fas fa-lock"></i>
                 </div>
             </th>
             <th class="col-1"></th>
@@ -86,34 +79,11 @@
                 </td>
             }
             <td>
-                @if (IsTemplate)
-                {
-                    <div class="text-center">
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                }
-                @if (!IsTemplate)
-                {
-                    @if (!set.IsComplete)
-                    {
-                        <div class="text-center">
-                            <button type="button" class="btn btn-secondary btn-sm" @onclick="() => MarkComplete(set)" disabled="@IsMarkCompleteDisabled(set)">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </div>
-                    }
-                    @if (set.IsComplete)
-                    {
-                        <div class="text-center">
-                            <button type="button" class="btn btn-primary btn-sm" @onclick="() => MarkIncomplete(set)">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </div>
-                    }
-
-                }
+                <div class="text-center">
+                    <button type="button" class="btn btn-secondary btn-sm" disabled>
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </td>
             <td>
                 <div class="text-center">

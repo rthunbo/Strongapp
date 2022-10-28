@@ -27,7 +27,7 @@
                         <br />
                         @foreach (var exerciseData in Workout.ExerciseData)
                         {
-                            <ExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" />
+                            <WorkoutExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" />
                         }
                         <button type="button" class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 20px;" @onclick="AddExercises">Add Exercises</button>
                         @if (WorkoutId == null)

@@ -8,7 +8,7 @@ using System.Data;
 
 namespace Strongapp.UI.Components
 {
-    public partial class ExerciseDataEdit
+    public partial class TemplateExerciseDataEdit
     {
         [Parameter]
         public StrongExerciseData ExerciseData { get; set; } = new StrongExerciseData();
@@ -19,36 +19,10 @@ namespace Strongapp.UI.Components
         [Parameter]
         public EventCallback<string> OnModified { get; set; }
 
-        [Parameter]
-        public bool IsTemplate { get; set; }
-
         [Inject]
         public IState<AppStore> State { get; set; } = default!;
 
         public StrongExerciseData? Previous => State.Value.Exercises.FirstOrDefault(x => x.ExerciseName == ExerciseData.ExerciseName, new StrongExerciseWithMetadata()).PreviousPerformance;
-
-        public bool IsMarkCompleteDisabled(StrongExerciseSetData Set)
-        {
-            if (ExerciseData.Category is StrongExerciseCategory.MachineOther or StrongExerciseCategory.Barbell
-                or StrongExerciseCategory.Dumbbell or StrongExerciseCategory.WeightedBodyweight
-                or StrongExerciseCategory.AssistedBodyweight)
-            {
-                return Set.Weight == null && Set.InitialWeight == null || Set.Reps == null && Set.InitialReps == null;
-            }
-            if (ExerciseData.Category is StrongExerciseCategory.RepsOnly)
-            {
-                return Set.Reps == null && Set.InitialReps == null;
-            }
-            if (ExerciseData.Category is StrongExerciseCategory.Cardio)
-            {
-                return Set.Seconds == null && Set.InitialSeconds == null || Set.Distance == null && Set.InitialDistance == null;
-            }
-            if (ExerciseData.Category is StrongExerciseCategory.Duration)
-            {
-                return Set.Seconds == null && Set.InitialSeconds == null;
-            }
-            return true;
-        }
 
         protected async Task RemoveExercise()
         {

@@ -18,7 +18,7 @@
                         <br />
                         @foreach (var exerciseData in Template.ExerciseData)
                         {
-                            <ExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" OnModified="SetModified" IsTemplate="true" />
+                            <TemplateExerciseDataEdit ExerciseData="exerciseData" OnRemoveExercise="RemoveExercise" OnModified="SetModified" />
                         }
                         <button type="button" class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 20px;" @onclick="AddExercises">Add Exercises</button>
                         @if (TemplateId != null)
