@@ -29,6 +29,6 @@ namespace Strongapp.Models
 
         public bool IsComplete { get; set; }
 
-        public List<StrongPersonalRecordType> PersonalRecords = new();
+        public List<StrongPersonalRecordType> PersonalRecords { get; set; } = new();
     }
 }
