@@ -106,7 +106,7 @@
                     <td>
                         @if (predictedPerformance.BestPerformance != null)
                         {
-                            <span>@predictedPerformance.BestPerformance.Weight kg (x @predictedPerformance.BestPerformance.Reps)</span>
+                            <span>@predictedPerformance.BestPerformance.Set.Weight kg (x @predictedPerformance.BestPerformance.Set.Reps)</span>
                             <br/>
                             <span>@predictedPerformance.BestPerformance.Date.Value.ToShortDateString()</span>
                         }

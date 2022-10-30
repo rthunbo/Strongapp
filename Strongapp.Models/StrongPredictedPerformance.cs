@@ -10,7 +10,7 @@ namespace Strongapp.Models
     {
         public int Reps { get; set; }
 
-        public StrongBestPerformance? BestPerformance { get; set; }
+        public StrongPerformance? BestPerformance { get; set; }
 
         public int? Predicted { get; set; }
     }

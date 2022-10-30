@@ -16,10 +16,10 @@ namespace Strongapp.UI.Components
         [Inject]
         public IExerciseService ExerciseService { get; set; } = default!;
 
-        public async ValueTask<ItemsProviderResult<StrongExerciseDataHistory>> LoadExerciseHistory(ItemsProviderRequest request)
+        public async ValueTask<ItemsProviderResult<StrongHistoricExerciseData>> LoadExerciseHistory(ItemsProviderRequest request)
         {
             var result = await ExerciseService.GetHistory(ExerciseName, request.StartIndex, request.Count, request.CancellationToken);
-            return new ItemsProviderResult<StrongExerciseDataHistory>(result.Items, result.TotalItemCount);
+            return new ItemsProviderResult<StrongHistoricExerciseData>(result.Items, result.TotalItemCount);
         }
     }
 }

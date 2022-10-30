@@ -22,7 +22,7 @@ namespace Strongapp.UI.Components
         [Inject]
         public IState<AppStore> State { get; set; } = default!;
 
-        public StrongExerciseData? Previous => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).PreviousPerformance;
+        public StrongHistoricExerciseData? Previous => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).PreviousPerformance;
 
         public StrongExerciseCategory Category => State.Value.Exercises.First(x => x.ExerciseName == ExerciseData.ExerciseName).Category;
 

@@ -9,13 +9,11 @@ namespace Strongapp.API.Services
 {
     public class WorkoutService
     {
-        private readonly MeasurementRepository _repository;
         private readonly ExerciseRepository _exerciseRepository;
         private readonly OneRMWeightCalculator _oneRmWeightCalculator;
 
         public WorkoutService(MeasurementRepository repository, OneRMWeightCalculator oneRmWeightCalculator, ExerciseRepository exerciseRepository)
         {
-            _repository = repository;
             _oneRmWeightCalculator = oneRmWeightCalculator;
             _exerciseRepository = exerciseRepository;
         }

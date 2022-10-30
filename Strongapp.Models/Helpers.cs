@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace Strongapp.Models
 {
     public class Helpers
     {
-        public static StrongExerciseSetData? GetBestSet(StrongExerciseCategory exerciseCategory, IEnumerable<StrongExerciseSetData> sets)
+        public static StrongExerciseSetData? GetBestSet(StrongExerciseCategory exerciseCategory, IEnumerable<StrongExerciseSetData?> sets)
         {
             return exerciseCategory switch
             {
@@ -29,5 +30,40 @@ namespace Strongapp.Models
                 _ => null
             };
         }
+
+        public static decimal GetBodyweight(List<StrongMeasurement> measurements, DateTime date)
+        {
+            var measurement =
+                measurements
+                    .Where(x => x.Name == "Weight")
+                    .OrderBy(x => x.Date)
+                    .Where(x => x.Date < date)
+                    .LastOrDefault();
+
+            decimal weight = 75;
+            if (measurement != null)
+            {
+                weight = measurement.Value;
+            }
+
+            return weight;
+        }
+
+        public static decimal ComputeVolume(StrongExerciseCategory category, decimal bodyweight, StrongExerciseSetData set)
+        {
+            return category switch
+            {
+                StrongExerciseCategory.Barbell => set.Weight.Value * set.Reps.Value,
+                StrongExerciseCategory.MachineOther => set.Weight.Value * set.Reps.Value,
+                StrongExerciseCategory.Dumbbell => 2 * set.Weight.Value * set.Reps.Value,
+                StrongExerciseCategory.WeightedBodyweight => (bodyweight + set.Weight.Value) * set.Reps.Value,
+                StrongExerciseCategory.AssistedBodyweight => (bodyweight - set.Weight.Value) * set.Reps.Value,
+                StrongExerciseCategory.RepsOnly => 0,
+                StrongExerciseCategory.Cardio => 0,
+                StrongExerciseCategory.Duration => 0,
+                _ => 0
+            };
+        }
+
     }
 }

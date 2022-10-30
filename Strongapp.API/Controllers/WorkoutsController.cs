@@ -28,38 +28,32 @@ namespace Strongapp.API.Controllers
         [HttpGet]
         public async Task<StrongWorkoutList> Get([FromQuery] int start, [FromQuery] int count)
         {
-            var measurements = await _measurementsRepository.GetAsync();
             var exercises = await _exerciseRepository.GetAsync();
+            var measurements = await _measurementsRepository.GetAsync();
 
             var items = _repository.AsQueryable()
                 .OrderByDescending(x => x.Date)
                 .Skip(start)
                 .Take(count)
                 .ToList()
-                .Select(x => {
-                    var bodyweight = GetBodyweight(x.Date, measurements);
+                .Select(w => {
+                    var bodyweight = Helpers.GetBodyweight(measurements, w.Date);
                     return new StrongWorkoutSummary
                     {
-                        Id = x.Id,
-                        Date = x.Date,
-                        WorkoutName = x.WorkoutName,
-                        Volume = x.ExerciseData.Sum(e => e.Sets.Sum(s =>
+                        Id = w.Id,
+                        Date = w.Date,
+                        WorkoutName = w.WorkoutName,
+                        Volume = w.ExerciseData.Sum(e => e.Sets.Sum(s =>
                         {
-                            var category = exercises.First(ex => ex.ExerciseName == e.ExerciseName).Category;
-                            return ComputeVolume(category, bodyweight, s);
+                            var exerciseCategory = exercises.First(x => x.ExerciseName == e.ExerciseName).Category;
+                            return Helpers.ComputeVolume(exerciseCategory, bodyweight, s);
                         })),
-                        NumberOfPersonalRecords = x.ExerciseData.Sum(x => x.Sets.Sum(y => y.PersonalRecords.Count)),
-                        ExerciseData = x.ExerciseData.Select(e =>
+                        NumberOfPersonalRecords = w.ExerciseData.Sum(e => e.Sets.Sum(s => s.PersonalRecords.Count)),
+                        ExerciseData = w.ExerciseData.Select(e => 
                         {
-                            var category = exercises.First(ex => ex.ExerciseName == e.ExerciseName).Category;
-                            return new StrongExerciseDataSummary
-                            {
-                                ExerciseName = e.ExerciseName,
-                                NumberOfSets = e.Sets.Count,
-                                BestSet = Helpers.GetBestSet(category, e.Sets)
-                            };
+                            var exerciseCategory = exercises.First(x => x.ExerciseName == e.ExerciseName).Category;
+                            return new StrongExerciseDataSummary(e.ExerciseName, e.Sets.Count, Helpers.GetBestSet(exerciseCategory, e.Sets));
                         }).ToList()
-
                     };
                 })
                 .ToList();
@@ -101,40 +95,6 @@ namespace Strongapp.API.Controllers
         public async Task Delete(string id)
         {
             await _repository.RemoveAsync(id);
-        }
-
-        private decimal? ComputeVolume(StrongExerciseCategory category, decimal bodyweight, StrongExerciseSetData set)
-        {
-            return category switch
-            {
-                StrongExerciseCategory.Barbell => set.Weight * set.Reps,
-                StrongExerciseCategory.MachineOther => set.Weight * set.Reps,
-                StrongExerciseCategory.Dumbbell => 2 * set.Weight * set.Reps,
-                StrongExerciseCategory.WeightedBodyweight => (bodyweight + set.Weight) * set.Reps,
-                StrongExerciseCategory.AssistedBodyweight => (bodyweight - set.Weight) * set.Reps,
-                StrongExerciseCategory.RepsOnly => 0,
-                StrongExerciseCategory.Cardio => 0,
-                StrongExerciseCategory.Duration => 0,
-                _ => 0
-            };
-        }
-
-        private decimal GetBodyweight(DateTime date, List<StrongMeasurement> measurements)
-        {
-            var measurement =
-                measurements
-                    .Where(x => x.Name == "Weight")
-                    .OrderBy(x => x.Date)
-                    .Where(x => x.Date < date)
-                    .LastOrDefault();
-
-            decimal weight = 75;
-            if (measurement != null)
-            {
-                weight = measurement.Value;
-            }
-
-            return weight;
         }
     }
 }

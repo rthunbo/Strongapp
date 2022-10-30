@@ -4,7 +4,7 @@ namespace Strongapp.UI.Services
 {
     public interface IExerciseService
     {
-        Task<StrongExerciseDataHistoryList> GetHistory(string name, int start, int count, CancellationToken cancellationToken);
+        Task<StrongHistoricExerciseDataList> GetHistory(string name, int start, int count, CancellationToken cancellationToken);
 
         Task<List<StrongExerciseWithMetadata>> GetExercises();
 

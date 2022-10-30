@@ -15,7 +15,7 @@ public class StrongExerciseWithMetadata
 
     public StrongExerciseCategory Category { get; set; }
 
-    public StrongExerciseData? PreviousPerformance { get; set; }
+    public StrongHistoricExerciseData? PreviousPerformance { get; set; }
 
     public StrongExerciseSetData? BestSet { get; set; }
 }

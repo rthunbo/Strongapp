@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Strongapp.Models
 {
-    public class StrongExerciseDataHistory
+    public class StrongHistoricExerciseData
     {
         public DateTime Date { get; set; }
 
-        public string WorkoutName { get; set; }
+        public string? WorkoutName { get; set; }
 
-        public List<StrongExerciseSetData> Sets { get; set; } = new List<StrongExerciseSetData>();
+        public List<StrongExerciseSetData> Sets { get; set; }
     }
 }
